@@ -1,5 +1,7 @@
 package ru.nchernetsov;
 
+import java.util.List;
+
 /*
  * Класс, представляющий нотацию Форсайта–Эдвардса (англ. Forsyth–Edwards Notation, FEN) —
  * стандартная нотация записи шахматных диаграмм
@@ -73,12 +75,14 @@ public class FEN {
         if (splitByWhitespace.length != 6) {
             throw new IllegalStateException("Fen split by whitespace length not equal 6");
         }
+
         String horizontals = splitByWhitespace[0];
         String whoseMove = splitByWhitespace[1];
         String castlings = splitByWhitespace[2];
         String aisleTaking = splitByWhitespace[3];
         String unknown = splitByWhitespace[4];
         String moveNumber = splitByWhitespace[5];
+
         // Горизонтали разбиваем по разделителю
         String[] horizontalsArray = horizontals.split(HORIZONTAL_DELIMITER);
         String horizontal8 = horizontalsArray[0];
@@ -90,7 +94,14 @@ public class FEN {
         String horizontal2 = horizontalsArray[6];
         String horizontal1 = horizontalsArray[7];
 
-
+        result[1] = horizontalRepresentation(8, horizontal8);
+        result[2] = horizontalRepresentation(7, horizontal7);
+        result[3] = horizontalRepresentation(6, horizontal6);
+        result[4] = horizontalRepresentation(5, horizontal5);
+        result[5] = horizontalRepresentation(4, horizontal4);
+        result[6] = horizontalRepresentation(3, horizontal3);
+        result[7] = horizontalRepresentation(2, horizontal2);
+        result[8] = horizontalRepresentation(1, horizontal1);
 
         return result;
     }
@@ -100,10 +111,55 @@ public class FEN {
     }
 
     public static String horizontalRepresentation(int horizontalNumber, String horizontal) {
+        String[] elements = new String[8];
 
-        for (char symbol : horizontal.toCharArray()) {
+        char[] chars = horizontal.toCharArray();
 
+        int index = 0;
+        for (char ch : chars) {
+            if (index > 7) {
+                break;
+            }
+            String chString = String.valueOf(ch);
+            if (chString.contains("1")) {
+                for (int i = 0; i < 1; i++) {
+                    elements[index++] = ".";
+                }
+            } else if (chString.contains("2")) {
+                for (int i = 0; i < 2; i++) {
+                    elements[index++] = ".";
+                }
+            } else if (chString.contains("3")) {
+                for (int i = 0; i < 3; i++) {
+                    elements[index++] = ".";
+                }
+            } else if (chString.contains("4")) {
+                for (int i = 0; i < 4; i++) {
+                    elements[index++] = ".";
+                }
+            } else if (chString.contains("5")) {
+                for (int i = 0; i < 5; i++) {
+                    elements[index++] = ".";
+                }
+            } else if (chString.contains("6")) {
+                for (int i = 0; i < 6; i++) {
+                    elements[index++] = ".";
+                }
+            } else if (chString.contains("7")) {
+                for (int i = 0; i < 7; i++) {
+                    elements[index++] = ".";
+                }
+            } else if (chString.contains("8")) {
+                for (int i = 0; i < 8; i++) {
+                    elements[index++] = ".";
+                }
+            } else if (Figures.notations.contains(chString.toLowerCase())) {
+                elements[index++] = chString;
+            }
         }
-        return "";
+
+        return String.format(HORIZONTAL_TEMPLATE, horizontalNumber,
+            elements[0], elements[1], elements[2], elements[3],
+            elements[4], elements[5], elements[6], elements[7]);
     }
 }

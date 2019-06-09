@@ -114,8 +114,6 @@ class FENTest {
         assertThat(positionRepresentation).isEqualTo(correctRepresentation);
     }
 
-
-
     private void checkPositionRepresentationSize(String[] positionRepresentation) {
         assertThat(positionRepresentation).hasSize(11);
         assertThat(positionRepresentation[0]).hasSize(21);

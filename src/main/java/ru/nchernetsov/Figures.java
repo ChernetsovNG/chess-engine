@@ -1,5 +1,9 @@
 package ru.nchernetsov;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public enum Figures {
 
     KING("k"),
@@ -23,4 +27,8 @@ public enum Figures {
     public String getNotation() {
         return notation;
     }
+
+    public static List<String> notations = Arrays.stream(values())
+        .map(Figures::getNotation)
+        .collect(Collectors.toList());
 }
