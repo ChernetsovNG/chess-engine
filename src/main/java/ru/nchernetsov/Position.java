@@ -8,39 +8,51 @@ public class Position {
     /**
      * Представление доски (8 горизонталей)
      */
-    private int[][] board = new int[8][8];
+    private final int[][] board;
 
     /**
      * Ход белых - true, ход белых - false
      */
-    private boolean isWhiteMove = true;
+    private final boolean isWhiteMove;
 
     /**
      * Возможность рокировки в короткую и длинную сторону
      */
-    private boolean whiteShortCastlingPossible = true;
-    private boolean blackShortCastlingPossible = true;
-    private boolean whiteLongCastlingPossible = true;
-    private boolean blackLongCastlingPossible = true;
+    private final boolean whiteShortCastlingPossible;
+    private final boolean blackShortCastlingPossible;
+    private final boolean whiteLongCastlingPossible;
+    private final boolean blackLongCastlingPossible;
 
     /**
      * Поле для возможного взятия на проходе
      */
-    private int[] aisleTakingSquare = {-1, -1};
+    private final int[] aisleTakingSquare;
 
     /**
      * Число полуходов, прошедших с последнего хода пешки или взятия фигуры
      */
-    private int halfMovesCount = 0;
+    private final int halfMovesCount;
 
     /**
      * Номер хода (счётчик увеличивается на 1 после каждого хода чёрных)
      */
-    private int moveNumber = 1;
+    private final int moveNumber;
+
+    public Position(int[][] board, boolean isWhiteMove, boolean whiteShortCastlingPossible,
+                    boolean blackShortCastlingPossible, boolean whiteLongCastlingPossible,
+                    boolean blackLongCastlingPossible, int[] aisleTakingSquare, int halfMovesCount, int moveNumber) {
+        this.board = board;
+        this.isWhiteMove = isWhiteMove;
+        this.whiteShortCastlingPossible = whiteShortCastlingPossible;
+        this.blackShortCastlingPossible = blackShortCastlingPossible;
+        this.whiteLongCastlingPossible = whiteLongCastlingPossible;
+        this.blackLongCastlingPossible = blackLongCastlingPossible;
+        this.aisleTakingSquare = aisleTakingSquare;
+        this.halfMovesCount = halfMovesCount;
+        this.moveNumber = moveNumber;
+    }
 
     public FEN toFEN() {
-        String fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-
         StringBuilder sb = new StringBuilder();
 
         // Заполняем фигуры
@@ -147,72 +159,36 @@ public class Position {
         return board;
     }
 
-    public void setBoard(int[][] board) {
-        this.board = board;
-    }
-
     public boolean isWhiteMove() {
         return isWhiteMove;
-    }
-
-    public void setWhiteMove(boolean whiteMove) {
-        isWhiteMove = whiteMove;
     }
 
     public boolean isWhiteShortCastlingPossible() {
         return whiteShortCastlingPossible;
     }
 
-    public void setWhiteShortCastlingPossible(boolean whiteShortCastlingPossible) {
-        this.whiteShortCastlingPossible = whiteShortCastlingPossible;
-    }
-
     public boolean isBlackShortCastlingPossible() {
         return blackShortCastlingPossible;
-    }
-
-    public void setBlackShortCastlingPossible(boolean blackShortCastlingPossible) {
-        this.blackShortCastlingPossible = blackShortCastlingPossible;
     }
 
     public boolean isWhiteLongCastlingPossible() {
         return whiteLongCastlingPossible;
     }
 
-    public void setWhiteLongCastlingPossible(boolean whiteLongCastlingPossible) {
-        this.whiteLongCastlingPossible = whiteLongCastlingPossible;
-    }
-
     public boolean isBlackLongCastlingPossible() {
         return blackLongCastlingPossible;
-    }
-
-    public void setBlackLongCastlingPossible(boolean blackLongCastlingPossible) {
-        this.blackLongCastlingPossible = blackLongCastlingPossible;
     }
 
     public int[] getAisleTakingSquare() {
         return aisleTakingSquare;
     }
 
-    public void setAisleTakingSquare(int[] aisleTakingSquare) {
-        this.aisleTakingSquare = aisleTakingSquare;
-    }
-
     public int getHalfMovesCount() {
         return halfMovesCount;
     }
 
-    public void setHalfMovesCount(int halfMovesCount) {
-        this.halfMovesCount = halfMovesCount;
-    }
-
     public int getMoveNumber() {
         return moveNumber;
-    }
-
-    public void setMoveNumber(int moveNumber) {
-        this.moveNumber = moveNumber;
     }
 
     // представления фигур
@@ -240,6 +216,4 @@ public class Position {
 
         figuresToCodes.forEach((figure, code) -> codesToFigures.put(code, figure));
     }
-
-    // PRIVATE section
 }
