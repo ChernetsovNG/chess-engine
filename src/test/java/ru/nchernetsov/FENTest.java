@@ -60,7 +60,7 @@ class FENTest {
              "    a b c d e f g h  "};
 
         FEN fen = new FEN(fenString);
-        String[] positionRepresentation = fen.positionRepresentation();
+        String[] positionRepresentation = fen.toRepresentation();
 
         checkPositionRepresentationSize(positionRepresentation);
         assertThat(positionRepresentation).isEqualTo(correctRepresentation);
@@ -83,7 +83,7 @@ class FENTest {
              "    a b c d e f g h  "};
 
         FEN fen = new FEN(fenString);
-        String[] positionRepresentation = fen.positionRepresentation();
+        String[] positionRepresentation = fen.toRepresentation();
 
         checkPositionRepresentationSize(positionRepresentation);
         assertThat(positionRepresentation).isEqualTo(correctRepresentation);
@@ -108,7 +108,7 @@ class FENTest {
              "    a b c d e f g h  "};
 
         FEN fen = new FEN(fenString);
-        String[] positionRepresentation = fen.positionRepresentation();
+        String[] positionRepresentation = fen.toRepresentation();
 
         checkPositionRepresentationSize(positionRepresentation);
         assertThat(positionRepresentation).isEqualTo(correctRepresentation);
