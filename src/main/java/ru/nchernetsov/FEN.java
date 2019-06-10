@@ -3,6 +3,8 @@ package ru.nchernetsov;
 import java.util.Arrays;
 import java.util.List;
 
+import static ru.nchernetsov.Position.figuresToCodes;
+
 /*
  * Класс, представляющий нотацию Форсайта–Эдвардса (англ. Forsyth–Edwards Notation, FEN) —
  * стандартная нотация записи шахматных диаграмм
@@ -43,6 +45,45 @@ public class FEN {
         this.fen = fen;
     }
 
+    public Position toPosition() {
+        Position position = new Position();
+
+        // Делим строку по пробелам - должно быть 6 элементов
+        String[] splitByWhitespace = fen.split("\\s");
+        if (splitByWhitespace.length != 6) {
+            throw new IllegalStateException("Fen split by whitespace length not equal 6");
+        }
+
+        String horizontals = splitByWhitespace[0];
+        String whoseMove = splitByWhitespace[1];
+        String castlings = splitByWhitespace[2];
+        String aisleTaking = splitByWhitespace[3];
+        String halfMovesCount = splitByWhitespace[4];
+        String moveNumber = splitByWhitespace[5];
+
+        // Заполняем доску фигурами
+        int[][] board = createBoard(horizontals);
+        position.setBoard(board);
+
+        // Ход белых?
+        boolean isWhiteMove = calculateWhoseMove(whoseMove);
+        position.setWhiteMove(isWhiteMove);
+
+        // Возможность рокировок
+        setCastlingsPossibility(position, castlings);
+
+        // Клетка для взятия на проходе
+        setAisleTakingSquare(position, aisleTaking);
+
+        int halfMovesCountInt = Integer.parseInt(halfMovesCount);
+        position.setHalfMovesCount(halfMovesCountInt);
+
+        int moveNumberInt = Integer.parseInt(moveNumber);
+        position.setMoveNumber(moveNumberInt);
+
+        return position;
+    }
+
     /**
      * Вывод шахматной диаграммы в текстовом ASCII формате по образцу
      * 11 строчек по 21 символу на каждом
@@ -55,11 +96,6 @@ public class FEN {
         }
 
         String horizontals = splitByWhitespace[0];
-        String whoseMove = splitByWhitespace[1];
-        String castlings = splitByWhitespace[2];
-        String aisleTaking = splitByWhitespace[3];
-        String unknown = splitByWhitespace[4];
-        String moveNumber = splitByWhitespace[5];
 
         // Горизонтали разбиваем по разделителю
         String[] horizontalsArray = horizontals.split(HORIZONTAL_DELIMITER);
@@ -85,6 +121,20 @@ public class FEN {
 
     public String getFen() {
         return fen;
+    }
+
+    public static int[] horizontalRepresentationToBoardRow(String horizontalRepresentation) {
+        String[] split = horizontalRepresentation.split("\\|");
+        String[] boardRowElements = split[1].trim().split("\\s");
+
+        int[] result = new int[8];
+        for (int i = 0; i < boardRowElements.length; i++) {
+            String element = boardRowElements[i];
+            Integer code = figuresToCodes.get(element);
+            result[i] = code;
+        }
+
+        return result;
     }
 
     public static String horizontalRepresentation(int horizontalNumber, String horizontal) {
@@ -142,6 +192,93 @@ public class FEN {
 
     // PRIVATE section
 
+    private int[][] createBoard(String horizontals) {
+        // Горизонтали разбиваем по разделителю
+        String[] horizontalsArray = horizontals.split(HORIZONTAL_DELIMITER);
+        if (horizontalsArray.length != 8) {
+            throw new IllegalStateException("Horizontals array length not equal 8");
+        }
+
+        int[][] board = new int[8][];
+
+        for (int i = 0; i < 8; i++) {
+            String horizontal = horizontalsArray[i];
+            String horizontalRepresentation = horizontalRepresentation(8 - i, horizontal);
+            int[] boardRow = horizontalRepresentationToBoardRow(horizontalRepresentation);
+            board[7 - i] = boardRow;
+        }
+
+        return board;
+    }
+
+    private boolean calculateWhoseMove(String whoseMove) {
+        if (whoseMove.equals("w")) {
+            return true;
+        } else if (whoseMove.equals("b")) {
+            return false;
+        }
+        throw new IllegalStateException("whoseMove = " + whoseMove + " Must be w or b");
+    }
+
+    private void setCastlingsPossibility(Position position, String castlings) {
+        if (castlings.contains("K")) {
+            position.setWhiteShortCastlingPossible(true);
+        } else {
+            position.setWhiteShortCastlingPossible(false);
+        }
+
+        if (castlings.contains("Q")) {
+            position.setWhiteLongCastlingPossible(true);
+        } else {
+            position.setWhiteLongCastlingPossible(false);
+        }
+
+        if (castlings.contains("k")) {
+            position.setBlackShortCastlingPossible(true);
+        } else {
+            position.setBlackShortCastlingPossible(false);
+        }
+
+        if (castlings.contains("q")) {
+            position.setBlackLongCastlingPossible(true);
+        } else {
+            position.setBlackLongCastlingPossible(false);
+        }
+    }
+
+    private void setAisleTakingSquare(Position position, String aisleTaking) {
+        if (!aisleTaking.equals("-")) {
+            char[] chars = aisleTaking.toCharArray();
+            char letter = chars[0];
+            char number = chars[1];
+
+            int horizontal = Integer.parseInt(String.valueOf(number));
+
+            int vertical = -1;
+            if (letter == 'a') {
+                vertical = 1;
+            } else if (letter == 'b') {
+                vertical = 2;
+            } else if (letter == 'c') {
+                vertical = 3;
+            } else if (letter == 'd') {
+                vertical = 4;
+            } else if (letter == 'e') {
+                vertical = 5;
+            } else if (letter == 'f') {
+                vertical = 6;
+            } else if (letter == 'g') {
+                vertical = 7;
+            } else if (letter == 'h') {
+                vertical = 8;
+            }
+            int[] aisleTakingSquare = new int[]{horizontal - 1, vertical - 1};
+            position.setAisleTakingSquare(aisleTakingSquare);
+        } else {
+            position.setAisleTakingSquare(new int[]{-1, -1});
+        }
+    }
+
     // const
 
     private static final String FIRST_ROW = "  +-----------------+";
@@ -158,9 +295,9 @@ public class FEN {
     /**
      * Разделитель записи для горизонталей
      */
-    private static final String HORIZONTAL_DELIMITER = "/";
+    public static final String HORIZONTAL_DELIMITER = "/";
 
-    private static final String EMPTY = ".";
+    public static final String EMPTY = ".";
 
     private static final List<String> figures = Arrays.asList(
             "k", "K", "q", "Q", "r", "R", "b", "B", "n", "N", "p", "P");
