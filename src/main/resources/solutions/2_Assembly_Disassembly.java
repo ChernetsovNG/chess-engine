@@ -1,6 +1,8 @@
 package ru.nchernetsov;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 public class Program {
     public static void main(String[] args) {
@@ -22,8 +24,6 @@ class FEN {
     }
 
     public Position toPosition() {
-        Position position = new Position();
-
         // Делим строку по пробелам - должно быть 6 элементов
         String[] splitByWhitespace = fen.split("\\s");
         if (splitByWhitespace.length != 6) {
@@ -38,26 +38,27 @@ class FEN {
         String moveNumber = splitByWhitespace[5];
 
         // Заполняем доску фигурами
-        int[][] board = createBoard(horizontals);
-        position.setBoard(board);
+        char[][] board = createBoard(horizontals);
 
         // Ход белых?
         boolean isWhiteMove = calculateWhoseMove(whoseMove);
-        position.setWhiteMove(isWhiteMove);
 
         // Возможность рокировок
-        setCastlingsPossibility(position, castlings);
+        boolean whiteShortCastlingPossible = getWhiteShortCastlingPossible(castlings);
+        boolean whiteLongCastlingPossible = getWhiteLongCastlingPossible(castlings);
+        boolean blackShortCastlingPossible = getBlackShortCastlingPossible(castlings);
+        boolean blackLongCastlingPossible = getBlackLongCastlingPossible(castlings);
 
         // Клетка для взятия на проходе
-        setAisleTakingSquare(position, aisleTaking);
+        int[] aisleTakingSquare = getAisleTakingSquare(aisleTaking);
 
         int halfMovesCountInt = Integer.parseInt(halfMovesCount);
-        position.setHalfMovesCount(halfMovesCountInt);
 
         int moveNumberInt = Integer.parseInt(moveNumber);
-        position.setMoveNumber(moveNumberInt);
 
-        return position;
+        return new Position(board, isWhiteMove, whiteShortCastlingPossible, blackShortCastlingPossible,
+                whiteLongCastlingPossible, blackLongCastlingPossible, aisleTakingSquare,
+                halfMovesCountInt, moveNumberInt);
     }
 
     /**
@@ -99,15 +100,14 @@ class FEN {
         return fen;
     }
 
-    public static int[] horizontalRepresentationToBoardRow(String horizontalRepresentation) {
+    public static char[] horizontalRepresentationToBoardRow(String horizontalRepresentation) {
         String[] split = horizontalRepresentation.split("\\|");
         String[] boardRowElements = split[1].trim().split("\\s");
 
-        int[] result = new int[8];
+        char[] result = new char[8];
         for (int i = 0; i < boardRowElements.length; i++) {
             String element = boardRowElements[i];
-            Integer code = figuresToCodes.get(element);
-            result[i] = code;
+            result[i] = element.toCharArray()[0];
         }
 
         return result;
@@ -168,19 +168,19 @@ class FEN {
 
     // PRIVATE section
 
-    private int[][] createBoard(String horizontals) {
+    private char[][] createBoard(String horizontals) {
         // Горизонтали разбиваем по разделителю
         String[] horizontalsArray = horizontals.split(HORIZONTAL_DELIMITER);
         if (horizontalsArray.length != 8) {
             throw new IllegalStateException("Horizontals array length not equal 8");
         }
 
-        int[][] board = new int[8][];
+        char[][] board = new char[8][];
 
         for (int i = 0; i < 8; i++) {
             String horizontal = horizontalsArray[i];
             String horizontalRepresentation = horizontalRepresentation(8 - i, horizontal);
-            int[] boardRow = horizontalRepresentationToBoardRow(horizontalRepresentation);
+            char[] boardRow = horizontalRepresentationToBoardRow(horizontalRepresentation);
             board[7 - i] = boardRow;
         }
 
@@ -196,63 +196,51 @@ class FEN {
         throw new IllegalStateException("whoseMove = " + whoseMove + " Must be w or b");
     }
 
-    private void setCastlingsPossibility(Position position, String castlings) {
-        if (castlings.contains("K")) {
-            position.setWhiteShortCastlingPossible(true);
-        } else {
-            position.setWhiteShortCastlingPossible(false);
-        }
-
-        if (castlings.contains("Q")) {
-            position.setWhiteLongCastlingPossible(true);
-        } else {
-            position.setWhiteLongCastlingPossible(false);
-        }
-
-        if (castlings.contains("k")) {
-            position.setBlackShortCastlingPossible(true);
-        } else {
-            position.setBlackShortCastlingPossible(false);
-        }
-
-        if (castlings.contains("q")) {
-            position.setBlackLongCastlingPossible(true);
-        } else {
-            position.setBlackLongCastlingPossible(false);
-        }
+    private boolean getWhiteShortCastlingPossible(String castlings) {
+        return castlings.contains("K");
     }
 
-    private void setAisleTakingSquare(Position position, String aisleTaking) {
-        if (!aisleTaking.equals("-")) {
-            char[] chars = aisleTaking.toCharArray();
-            char letter = chars[0];
-            char number = chars[1];
+    private boolean getWhiteLongCastlingPossible(String castlings) {
+        return castlings.contains("Q");
+    }
 
-            int horizontal = Integer.parseInt(String.valueOf(number));
+    private boolean getBlackShortCastlingPossible(String castlings) {
+        return castlings.contains("k");
+    }
 
-            int vertical = -1;
-            if (letter == 'a') {
-                vertical = 1;
-            } else if (letter == 'b') {
-                vertical = 2;
-            } else if (letter == 'c') {
-                vertical = 3;
-            } else if (letter == 'd') {
-                vertical = 4;
-            } else if (letter == 'e') {
-                vertical = 5;
-            } else if (letter == 'f') {
-                vertical = 6;
-            } else if (letter == 'g') {
-                vertical = 7;
-            } else if (letter == 'h') {
-                vertical = 8;
-            }
-            int[] aisleTakingSquare = new int[]{horizontal - 1, vertical - 1};
-            position.setAisleTakingSquare(aisleTakingSquare);
-        } else {
-            position.setAisleTakingSquare(new int[]{-1, -1});
+    private boolean getBlackLongCastlingPossible(String castlings) {
+        return castlings.contains("q");
+    }
+
+    private int[] getAisleTakingSquare(String aisleTaking) {
+        if (aisleTaking.equals("-")) {
+            return new int[]{-1, -1};
         }
+        char[] chars = aisleTaking.toCharArray();
+        char letter = chars[0];
+        char number = chars[1];
+
+        int horizontal = Integer.parseInt(String.valueOf(number));
+
+        int vertical = -1;
+        if (letter == 'a') {
+            vertical = 1;
+        } else if (letter == 'b') {
+            vertical = 2;
+        } else if (letter == 'c') {
+            vertical = 3;
+        } else if (letter == 'd') {
+            vertical = 4;
+        } else if (letter == 'e') {
+            vertical = 5;
+        } else if (letter == 'f') {
+            vertical = 6;
+        } else if (letter == 'g') {
+            vertical = 7;
+        } else if (letter == 'h') {
+            vertical = 8;
+        }
+        return new int[]{horizontal - 1, vertical - 1};
     }
 
     // const
@@ -284,44 +272,56 @@ class Position {
     /**
      * Представление доски (8 горизонталей)
      */
-    private int[][] board = new int[8][8];
+    private final char[][] board;
 
     /**
      * Ход белых - true, ход белых - false
      */
-    private boolean isWhiteMove = true;
+    private final boolean isWhiteMove;
 
     /**
      * Возможность рокировки в короткую и длинную сторону
      */
-    private boolean whiteShortCastlingPossible = true;
-    private boolean blackShortCastlingPossible = true;
-    private boolean whiteLongCastlingPossible = true;
-    private boolean blackLongCastlingPossible = true;
+    private final boolean whiteShortCastlingPossible;
+    private final boolean blackShortCastlingPossible;
+    private final boolean whiteLongCastlingPossible;
+    private final boolean blackLongCastlingPossible;
 
     /**
      * Поле для возможного взятия на проходе
      */
-    private int[] aisleTakingSquare = {-1, -1};
+    private final int[] aisleTakingSquare;
 
     /**
      * Число полуходов, прошедших с последнего хода пешки или взятия фигуры
      */
-    private int halfMovesCount = 0;
+    private final int halfMovesCount;
 
     /**
      * Номер хода (счётчик увеличивается на 1 после каждого хода чёрных)
      */
-    private int moveNumber = 1;
+    private final int moveNumber;
+
+    public Position(char[][] board, boolean isWhiteMove, boolean whiteShortCastlingPossible,
+                    boolean blackShortCastlingPossible, boolean whiteLongCastlingPossible,
+                    boolean blackLongCastlingPossible, int[] aisleTakingSquare, int halfMovesCount, int moveNumber) {
+        this.board = board;
+        this.isWhiteMove = isWhiteMove;
+        this.whiteShortCastlingPossible = whiteShortCastlingPossible;
+        this.blackShortCastlingPossible = blackShortCastlingPossible;
+        this.whiteLongCastlingPossible = whiteLongCastlingPossible;
+        this.blackLongCastlingPossible = blackLongCastlingPossible;
+        this.aisleTakingSquare = aisleTakingSquare;
+        this.halfMovesCount = halfMovesCount;
+        this.moveNumber = moveNumber;
+    }
 
     public FEN toFEN() {
-        String fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-
         StringBuilder sb = new StringBuilder();
 
         // Заполняем фигуры
         for (int i = board.length - 1; i >= 0; i--) {
-            int[] horizontal = board[i];
+            char[] horizontal = board[i];
             String rowFenString = horizontalToFENString(horizontal);
             sb.append(rowFenString);
             if (i > 0) {
@@ -394,20 +394,18 @@ class Position {
         return new FEN(sb.toString());
     }
 
-    public static String horizontalToFENString(int[] horizontal) {
+    public static String horizontalToFENString(char[] horizontal) {
         StringBuilder sb = new StringBuilder();
         int emptyCounter = 0;
         for (int i = 0; i < 8; i++) {
-            int element = horizontal[i];
-            String figure = codesToFigures.get(element);
-            if (!figure.equals(FEN.EMPTY)) {
-                sb.append(figure);
+            char element = horizontal[i];
+            if (element != '.') {
+                sb.append(element);
             } else {
                 emptyCounter++;
                 if (i < 7) {
-                    int nextElement = horizontal[i + 1];
-                    String nextFigure = codesToFigures.get(nextElement);
-                    if (!nextFigure.equals(FEN.EMPTY)) {
+                    char nextElement = horizontal[i + 1];
+                    if (nextElement != '.') {
                         sb.append(emptyCounter);
                         emptyCounter = 0;
                     }
@@ -419,104 +417,39 @@ class Position {
         return sb.toString();
     }
 
-    public int[][] getBoard() {
+    public char[][] getBoard() {
         return board;
-    }
-
-    public void setBoard(int[][] board) {
-        this.board = board;
     }
 
     public boolean isWhiteMove() {
         return isWhiteMove;
     }
 
-    public void setWhiteMove(boolean whiteMove) {
-        isWhiteMove = whiteMove;
-    }
-
     public boolean isWhiteShortCastlingPossible() {
         return whiteShortCastlingPossible;
-    }
-
-    public void setWhiteShortCastlingPossible(boolean whiteShortCastlingPossible) {
-        this.whiteShortCastlingPossible = whiteShortCastlingPossible;
     }
 
     public boolean isBlackShortCastlingPossible() {
         return blackShortCastlingPossible;
     }
 
-    public void setBlackShortCastlingPossible(boolean blackShortCastlingPossible) {
-        this.blackShortCastlingPossible = blackShortCastlingPossible;
-    }
-
     public boolean isWhiteLongCastlingPossible() {
         return whiteLongCastlingPossible;
-    }
-
-    public void setWhiteLongCastlingPossible(boolean whiteLongCastlingPossible) {
-        this.whiteLongCastlingPossible = whiteLongCastlingPossible;
     }
 
     public boolean isBlackLongCastlingPossible() {
         return blackLongCastlingPossible;
     }
 
-    public void setBlackLongCastlingPossible(boolean blackLongCastlingPossible) {
-        this.blackLongCastlingPossible = blackLongCastlingPossible;
-    }
-
     public int[] getAisleTakingSquare() {
         return aisleTakingSquare;
-    }
-
-    public void setAisleTakingSquare(int[] aisleTakingSquare) {
-        this.aisleTakingSquare = aisleTakingSquare;
     }
 
     public int getHalfMovesCount() {
         return halfMovesCount;
     }
 
-    public void setHalfMovesCount(int halfMovesCount) {
-        this.halfMovesCount = halfMovesCount;
-    }
-
     public int getMoveNumber() {
         return moveNumber;
     }
-
-    public void setMoveNumber(int moveNumber) {
-        this.moveNumber = moveNumber;
-    }
-
-    // представления фигур
-    public static final Map<String, Integer> figuresToCodes = new HashMap<>();
-    public static final Map<Integer, String> codesToFigures = new HashMap<>();
-
-    static {
-        // фигуры белых
-        figuresToCodes.put("K", 11);
-        figuresToCodes.put("Q", 12);
-        figuresToCodes.put("R", 13);
-        figuresToCodes.put("B", 14);
-        figuresToCodes.put("N", 15);
-        figuresToCodes.put("P", 16);
-
-        // фигуры черных
-        figuresToCodes.put("k", 21);
-        figuresToCodes.put("q", 22);
-        figuresToCodes.put("r", 23);
-        figuresToCodes.put("b", 24);
-        figuresToCodes.put("n", 25);
-        figuresToCodes.put("p", 26);
-
-        figuresToCodes.put(".", 0);
-
-        figuresToCodes.forEach((figure, code) -> codesToFigures.put(code, figure));
-    }
-
-    // PRIVATE section
 }
-
