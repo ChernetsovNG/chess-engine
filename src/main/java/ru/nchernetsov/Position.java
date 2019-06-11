@@ -134,6 +134,28 @@ public class Position {
     }
 
     /**
+     * Выполнить простой ход
+     */
+    public Position move(String move) {
+        String fromSquareStr = move.substring(move.length() - 4, move.length() - 2);
+        String toSquareStr = move.substring(move.length() - 2);
+
+        Square fromSquare = new Square(fromSquareStr);
+        Square toSquare = new Square(toSquareStr);
+
+        Position positionCopy = copy();
+
+        positionCopy.incrementMove();
+        positionCopy.incrementHalfMove(move);
+
+        char fromSquareElement = positionCopy.boardElement(fromSquare);
+        positionCopy.setBoardElement(toSquare, fromSquareElement);
+        positionCopy.setBoardElement(fromSquare, '.');
+
+        return positionCopy;
+    }
+
+    /**
      * Изменяем очерёдность хода и увеличиваем счётчик ходов
      */
     public void incrementMove() {
@@ -162,26 +184,20 @@ public class Position {
 
     private boolean wasPawnMove(String move) {
         // с поля
-        String fromSquare = move.substring(move.length() - 4, move.length() - 2);
+        String fromSquareStr = move.substring(move.length() - 4, move.length() - 2);
+        Square fromSquare = new Square(fromSquareStr);
 
-        Square from = new Square(fromSquare);
-
-        int fromHorizontalIndex = from.getHorizontalIndex();
-        int fromVerticalIndex = from.getVerticalIndex();
-
-        char fromElement = board[fromHorizontalIndex][fromVerticalIndex];
+        char fromElement = boardElement(fromSquare);
 
         return fromElement == 'P' || fromElement == 'p';
     }
 
     private boolean wasTakingByFigure(String move) {
-        // пошли на поле
-        String toSquare = move.substring(move.length() - 2);
-        Square square = new Square(toSquare);
+        // на поле
+        String toSquareStr = move.substring(move.length() - 2);
+        Square toSquare = new Square(toSquareStr);
         // если на этом поле что-то было, то это взятие
-        int horizontalIndex = square.getHorizontalIndex();
-        int verticalIndex = square.getVerticalIndex();
-        return board[horizontalIndex][verticalIndex] != '.';
+        return boardElement(toSquare) != '.';
     }
 
     public Position copy() {
@@ -189,6 +205,18 @@ public class Position {
                 this.isWhiteMove, this.whiteShortCastlingPossible, this.blackShortCastlingPossible,
                 this.whiteLongCastlingPossible, this.blackLongCastlingPossible,
                 this.aisleTakingSquare, this.halfMovesCount, this.moveNumber);
+    }
+
+    public char boardElement(Square square) {
+        int horizontalIndex = square.getHorizontalIndex();
+        int verticalIndex = square.getVerticalIndex();
+        return board[horizontalIndex][verticalIndex];
+    }
+
+    private void setBoardElement(Square square, char element) {
+        int horizontalIndex = square.getHorizontalIndex();
+        int verticalIndex = square.getVerticalIndex();
+        board[horizontalIndex][verticalIndex] = element;
     }
 
     public char[][] getBoard() {
