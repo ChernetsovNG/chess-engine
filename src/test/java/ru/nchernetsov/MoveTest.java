@@ -53,4 +53,18 @@ public class MoveTest {
         FEN fenAfterMove = position.toFEN();
         assertThat(fenAfterMove.getFen()).isEqualTo("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 1 1");
     }
+
+    @Test
+    void incrementHalfMoveTest2() {
+        String fenString = "r1bqk2r/1pppbppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 4 6";
+        String move = "d2d4";  // ход пешкой
+        FEN fen = new FEN(fenString);
+        Position position = fen.toPosition();
+        position.incrementMove();
+        position.incrementHalfMove(move);
+        FEN fenAfterMove = position.toFEN();
+        assertThat(fenAfterMove.getFen()).isEqualTo("r1bqk2r/1pppbppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 0 6");
+    }
 }
+
+

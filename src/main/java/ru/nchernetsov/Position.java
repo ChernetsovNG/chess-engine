@@ -169,7 +169,9 @@ public class Position {
         int fromHorizontalIndex = from.getHorizontalIndex();
         int fromVerticalIndex = from.getVerticalIndex();
 
-        return board[fromHorizontalIndex][fromVerticalIndex] == '.';
+        char fromElement = board[fromHorizontalIndex][fromVerticalIndex];
+
+        return fromElement == 'P' || fromElement == 'p';
     }
 
     private boolean wasTakingByFigure(String move) {
