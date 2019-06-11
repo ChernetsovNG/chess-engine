@@ -41,4 +41,16 @@ public class MoveTest {
         FEN fenAfterMove = position.toFEN();
         assertThat(fenAfterMove.getFen()).isEqualTo("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 3");
     }
+
+    @Test
+    void incrementHalfMoveTest1() {
+        String fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        String move = "b1f3";
+        FEN fen = new FEN(fenString);
+        Position position = fen.toPosition();
+        position.incrementMove();
+        position.incrementHalfMove(move);
+        FEN fenAfterMove = position.toFEN();
+        assertThat(fenAfterMove.getFen()).isEqualTo("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 1 1");
+    }
 }

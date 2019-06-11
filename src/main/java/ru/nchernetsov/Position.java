@@ -30,7 +30,7 @@ public class Position {
     /**
      * Число полуходов, прошедших с последнего хода пешки или взятия фигуры
      */
-    private final int halfMovesCount;
+    private int halfMovesCount;
 
     /**
      * Номер хода (счётчик увеличивается на 1 после каждого хода чёрных)
@@ -143,6 +143,43 @@ public class Position {
             isWhiteMove = true;
             moveNumber++;
         }
+    }
+
+    /**
+     * Счётчик полуходов
+     * Счётчик сбрасывается, если было взятие или ход пешкой
+     * В остальных случаях счётчик увеличивается на 1 после каждого полухода
+     */
+    public void incrementHalfMove(String move) {
+        if (wasPawnMove(move)) {  // ход пешкой
+            halfMovesCount = 0;
+        } else if (wasTakingByFigure(move)) {  // взятие
+            halfMovesCount = 0;
+        } else {
+            halfMovesCount++;
+        }
+    }
+
+    private boolean wasPawnMove(String move) {
+        // с поля
+        String fromSquare = move.substring(move.length() - 4, move.length() - 2);
+
+        Square from = new Square(fromSquare);
+
+        int fromHorizontalIndex = from.getHorizontalIndex();
+        int fromVerticalIndex = from.getVerticalIndex();
+
+        return board[fromHorizontalIndex][fromVerticalIndex] == '.';
+    }
+
+    private boolean wasTakingByFigure(String move) {
+        // пошли на поле
+        String toSquare = move.substring(move.length() - 2);
+        Square square = new Square(toSquare);
+        // если на этом поле что-то было, то это взятие
+        int horizontalIndex = square.getHorizontalIndex();
+        int verticalIndex = square.getVerticalIndex();
+        return board[horizontalIndex][verticalIndex] != '.';
     }
 
     public Position copy() {
