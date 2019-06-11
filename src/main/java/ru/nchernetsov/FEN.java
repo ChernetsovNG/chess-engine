@@ -3,8 +3,6 @@ package ru.nchernetsov;
 import java.util.Arrays;
 import java.util.List;
 
-import static ru.nchernetsov.Position.figuresToCodes;
-
 /*
  * Класс, представляющий нотацию Форсайта–Эдвардса (англ. Forsyth–Edwards Notation, FEN) —
  * стандартная нотация записи шахматных диаграмм
@@ -60,7 +58,7 @@ public class FEN {
         String moveNumber = splitByWhitespace[5];
 
         // Заполняем доску фигурами
-        int[][] board = createBoard(horizontals);
+        char[][] board = createBoard(horizontals);
 
         // Ход белых?
         boolean isWhiteMove = calculateWhoseMove(whoseMove);
@@ -122,15 +120,14 @@ public class FEN {
         return fen;
     }
 
-    public static int[] horizontalRepresentationToBoardRow(String horizontalRepresentation) {
+    public static char[] horizontalRepresentationToBoardRow(String horizontalRepresentation) {
         String[] split = horizontalRepresentation.split("\\|");
         String[] boardRowElements = split[1].trim().split("\\s");
 
-        int[] result = new int[8];
+        char[] result = new char[8];
         for (int i = 0; i < boardRowElements.length; i++) {
             String element = boardRowElements[i];
-            Integer code = figuresToCodes.get(element);
-            result[i] = code;
+            result[i] = element.toCharArray()[0];
         }
 
         return result;
@@ -191,19 +188,19 @@ public class FEN {
 
     // PRIVATE section
 
-    private int[][] createBoard(String horizontals) {
+    private char[][] createBoard(String horizontals) {
         // Горизонтали разбиваем по разделителю
         String[] horizontalsArray = horizontals.split(HORIZONTAL_DELIMITER);
         if (horizontalsArray.length != 8) {
             throw new IllegalStateException("Horizontals array length not equal 8");
         }
 
-        int[][] board = new int[8][];
+        char[][] board = new char[8][];
 
         for (int i = 0; i < 8; i++) {
             String horizontal = horizontalsArray[i];
             String horizontalRepresentation = horizontalRepresentation(8 - i, horizontal);
-            int[] boardRow = horizontalRepresentationToBoardRow(horizontalRepresentation);
+            char[] boardRow = horizontalRepresentationToBoardRow(horizontalRepresentation);
             board[7 - i] = boardRow;
         }
 

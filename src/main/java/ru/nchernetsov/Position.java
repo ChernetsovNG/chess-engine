@@ -1,14 +1,11 @@
 package ru.nchernetsov;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Position {
 
     /**
      * Представление доски (8 горизонталей)
      */
-    private final int[][] board;
+    private final char[][] board;
 
     /**
      * Ход белых - true, ход белых - false
@@ -38,7 +35,7 @@ public class Position {
      */
     private final int moveNumber;
 
-    public Position(int[][] board, boolean isWhiteMove, boolean whiteShortCastlingPossible,
+    public Position(char[][] board, boolean isWhiteMove, boolean whiteShortCastlingPossible,
                     boolean blackShortCastlingPossible, boolean whiteLongCastlingPossible,
                     boolean blackLongCastlingPossible, int[] aisleTakingSquare, int halfMovesCount, int moveNumber) {
         this.board = board;
@@ -57,7 +54,7 @@ public class Position {
 
         // Заполняем фигуры
         for (int i = board.length - 1; i >= 0; i--) {
-            int[] horizontal = board[i];
+            char[] horizontal = board[i];
             String rowFenString = horizontalToFENString(horizontal);
             sb.append(rowFenString);
             if (i > 0) {
@@ -130,20 +127,18 @@ public class Position {
         return new FEN(sb.toString());
     }
 
-    public static String horizontalToFENString(int[] horizontal) {
+    public static String horizontalToFENString(char[] horizontal) {
         StringBuilder sb = new StringBuilder();
         int emptyCounter = 0;
         for (int i = 0; i < 8; i++) {
-            int element = horizontal[i];
-            String figure = codesToFigures.get(element);
-            if (!figure.equals(FEN.EMPTY)) {
-                sb.append(figure);
+            char element = horizontal[i];
+            if (element != '.') {
+                sb.append(element);
             } else {
                 emptyCounter++;
                 if (i < 7) {
-                    int nextElement = horizontal[i + 1];
-                    String nextFigure = codesToFigures.get(nextElement);
-                    if (!nextFigure.equals(FEN.EMPTY)) {
+                    char nextElement = horizontal[i + 1];
+                    if (nextElement != '.') {
                         sb.append(emptyCounter);
                         emptyCounter = 0;
                     }
@@ -155,7 +150,7 @@ public class Position {
         return sb.toString();
     }
 
-    public int[][] getBoard() {
+    public char[][] getBoard() {
         return board;
     }
 
@@ -189,31 +184,5 @@ public class Position {
 
     public int getMoveNumber() {
         return moveNumber;
-    }
-
-    // представления фигур
-    public static final Map<String, Integer> figuresToCodes = new HashMap<>();
-    public static final Map<Integer, String> codesToFigures = new HashMap<>();
-
-    static {
-        // фигуры белых
-        figuresToCodes.put("K", 11);
-        figuresToCodes.put("Q", 12);
-        figuresToCodes.put("R", 13);
-        figuresToCodes.put("B", 14);
-        figuresToCodes.put("N", 15);
-        figuresToCodes.put("P", 16);
-
-        // фигуры черных
-        figuresToCodes.put("k", 21);
-        figuresToCodes.put("q", 22);
-        figuresToCodes.put("r", 23);
-        figuresToCodes.put("b", 24);
-        figuresToCodes.put("n", 25);
-        figuresToCodes.put("p", 26);
-
-        figuresToCodes.put(".", 0);
-
-        figuresToCodes.forEach((figure, code) -> codesToFigures.put(code, figure));
     }
 }

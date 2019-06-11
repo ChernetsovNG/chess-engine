@@ -16,16 +16,16 @@ class AssemblyAndDisassemblyTest {
 
         Position position = fen.toPosition();
 
-        int[][] board = position.getBoard();
+        char[][] board = position.getBoard();
         assertThat(board).hasSize(8);
-        assertThat(board[0]).containsExactly(13, 15, 14, 12, 11, 14, 15, 13);
-        assertThat(board[1]).containsExactly(16, 16, 16, 16, 16, 16, 16, 16);
-        assertThat(board[2]).containsExactly(0, 0, 0, 0, 0, 0, 0, 0);
-        assertThat(board[3]).containsExactly(0, 0, 0, 0, 0, 0, 0, 0);
-        assertThat(board[4]).containsExactly(0, 0, 0, 0, 0, 0, 0, 0);
-        assertThat(board[5]).containsExactly(0, 0, 0, 0, 0, 0, 0, 0);
-        assertThat(board[6]).containsExactly(26, 26, 26, 26, 26, 26, 26, 26);
-        assertThat(board[7]).containsExactly(23, 25, 24, 22, 21, 24, 25, 23);
+        assertThat(board[0]).containsExactly('R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R');
+        assertThat(board[1]).containsExactly('P', 'P', 'P', 'P', 'P', 'P', 'P', 'P');
+        assertThat(board[2]).containsExactly('.', '.', '.', '.', '.', '.', '.', '.');
+        assertThat(board[3]).containsExactly('.', '.', '.', '.', '.', '.', '.', '.');
+        assertThat(board[4]).containsExactly('.', '.', '.', '.', '.', '.', '.', '.');
+        assertThat(board[5]).containsExactly('.', '.', '.', '.', '.', '.', '.', '.');
+        assertThat(board[6]).containsExactly('p', 'p', 'p', 'p', 'p', 'p', 'p', 'p');
+        assertThat(board[7]).containsExactly('r', 'n', 'b', 'q', 'k', 'b', 'n', 'r');
 
         assertThat(position.isWhiteMove()).isTrue();
 
@@ -50,16 +50,16 @@ class AssemblyAndDisassemblyTest {
         FEN fen = new FEN(fenString);
         Position position = fen.toPosition();
 
-        int[][] board = position.getBoard();
+        char[][] board = position.getBoard();
         assertThat(board).hasSize(8);
-        assertThat(board[0]).containsExactly(13, 15, 14, 12, 11, 14, 15, 13);
-        assertThat(board[1]).containsExactly(16, 16, 16, 16, 16, 16, 16, 16);
-        assertThat(board[2]).containsExactly(0, 0, 0, 0, 0, 0, 0, 0);
-        assertThat(board[3]).containsExactly(0, 0, 0, 0, 0, 0, 0, 0);
-        assertThat(board[4]).containsExactly(0, 0, 0, 0, 0, 0, 0, 0);
-        assertThat(board[5]).containsExactly(0, 0, 0, 0, 0, 0, 0, 0);
-        assertThat(board[6]).containsExactly(26, 26, 26, 26, 26, 26, 26, 26);
-        assertThat(board[7]).containsExactly(23, 25, 24, 22, 21, 24, 25, 23);
+        assertThat(board[0]).containsExactly('R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R');
+        assertThat(board[1]).containsExactly('P', 'P', 'P', 'P', 'P', 'P', 'P', 'P');
+        assertThat(board[2]).containsExactly('.', '.', '.', '.', '.', '.', '.', '.');
+        assertThat(board[3]).containsExactly('.', '.', '.', '.', '.', '.', '.', '.');
+        assertThat(board[4]).containsExactly('.', '.', '.', '.', '.', '.', '.', '.');
+        assertThat(board[5]).containsExactly('.', '.', '.', '.', '.', '.', '.', '.');
+        assertThat(board[6]).containsExactly('p', 'p', 'p', 'p', 'p', 'p', 'p', 'p');
+        assertThat(board[7]).containsExactly('r', 'n', 'b', 'q', 'k', 'b', 'n', 'r');
 
         assertThat(position.isWhiteMove()).isTrue();
 
@@ -84,16 +84,16 @@ class AssemblyAndDisassemblyTest {
         FEN fen = new FEN(fenString);
         Position position = fen.toPosition();
 
-        int[][] board = position.getBoard();
+        char[][] board = position.getBoard();
         assertThat(board).hasSize(8);
-        assertThat(board[0]).containsExactly(13, 15, 14, 12, 11, 14, 0, 13);
-        assertThat(board[1]).containsExactly(16, 16, 16, 16, 0, 16, 16, 16);
-        assertThat(board[2]).containsExactly(0, 0, 0, 0, 0, 15, 0, 0);
-        assertThat(board[3]).containsExactly(0, 0, 0, 0, 16, 0, 0, 0);
-        assertThat(board[4]).containsExactly(0, 0, 26, 0, 0, 0, 0, 0);
-        assertThat(board[5]).containsExactly(0, 0, 25, 0, 0, 0, 0, 0);
-        assertThat(board[6]).containsExactly(26, 26, 0, 26, 26, 26, 26, 26);
-        assertThat(board[7]).containsExactly(23, 0, 24, 22, 21, 24, 25, 23);
+        assertThat(board[0]).containsExactly('R', 'N', 'B', 'Q', 'K', 'B', '.', 'R');
+        assertThat(board[1]).containsExactly('P', 'P', 'P', 'P', '.', 'P', 'P', 'P');
+        assertThat(board[2]).containsExactly('.', '.', '.', '.', '.', 'N', '.', '.');
+        assertThat(board[3]).containsExactly('.', '.', '.', '.', 'P', '.', '.', '.');
+        assertThat(board[4]).containsExactly('.', '.', 'p', '.', '.', '.', '.', '.');
+        assertThat(board[5]).containsExactly('.', '.', 'n', '.', '.', '.', '.', '.');
+        assertThat(board[6]).containsExactly('p', 'p', '.', 'p', 'p', 'p', 'p', 'p');
+        assertThat(board[7]).containsExactly('r', '.', 'b', 'q', 'k', 'b', 'n', 'r');
 
         assertThat(position.isWhiteMove()).isTrue();
 
@@ -118,16 +118,16 @@ class AssemblyAndDisassemblyTest {
         FEN fen = new FEN(fenString);
         Position position = fen.toPosition();
 
-        int[][] board = position.getBoard();
+        char[][] board = position.getBoard();
         assertThat(board).hasSize(8);
-        assertThat(board[0]).containsExactly(13, 15, 14, 12, 11, 14, 0, 13);
-        assertThat(board[1]).containsExactly(16, 16, 16, 0, 0, 16, 16, 16);
-        assertThat(board[2]).containsExactly(0, 0, 0, 0, 0, 15, 0, 0);
-        assertThat(board[3]).containsExactly(0, 0, 0, 16, 0, 0, 0, 0);
-        assertThat(board[4]).containsExactly(0, 0, 26, 0, 16, 26, 0, 0);
-        assertThat(board[5]).containsExactly(0, 26, 25, 0, 0, 0, 0, 0);
-        assertThat(board[6]).containsExactly(26, 0, 0, 26, 26, 0, 26, 26);
-        assertThat(board[7]).containsExactly(23, 0, 24, 22, 21, 24, 25, 23);
+        assertThat(board[0]).containsExactly('R', 'N', 'B', 'Q', 'K', 'B', '.', 'R');
+        assertThat(board[1]).containsExactly('P', 'P', 'P', '.', '.', 'P', 'P', 'P');
+        assertThat(board[2]).containsExactly('.', '.', '.', '.', '.', 'N', '.', '.');
+        assertThat(board[3]).containsExactly('.', '.', '.', 'P', '.', '.', '.', '.');
+        assertThat(board[4]).containsExactly('.', '.', 'p', '.', 'P', 'p', '.', '.');
+        assertThat(board[5]).containsExactly('.', 'p', 'n', '.', '.', '.', '.', '.');
+        assertThat(board[6]).containsExactly('p', '.', '.', 'p', 'p', '.', 'p', 'p');
+        assertThat(board[7]).containsExactly('r', '.', 'b', 'q', 'k', 'b', 'n', 'r');
 
         assertThat(position.isWhiteMove()).isTrue();
 
@@ -150,94 +150,94 @@ class AssemblyAndDisassemblyTest {
     void horizontalRepresentationTest1() {
         String representation = horizontalRepresentation(8, "rnbqkbnr");
         Assertions.assertThat(representation).isEqualTo("8 | r n b q k b n r |");
-        int[] boardRow = horizontalRepresentationToBoardRow(representation);
+        char[] boardRow = horizontalRepresentationToBoardRow(representation);
         assertThat(boardRow).hasSize(8);
-        assertThat(boardRow).containsExactly(23, 25, 24, 22, 21, 24, 25, 23);
+        assertThat(boardRow).containsExactly('r', 'n', 'b', 'q', 'k', 'b', 'n', 'r');
     }
 
     @Test
     void horizontalRepresentationTest2() {
         String representation = horizontalRepresentation(6, "8");
         Assertions.assertThat(representation).isEqualTo("6 | . . . . . . . . |");
-        int[] boardRow = horizontalRepresentationToBoardRow(representation);
+        char[] boardRow = horizontalRepresentationToBoardRow(representation);
         assertThat(boardRow).hasSize(8);
-        assertThat(boardRow).containsExactly(0, 0, 0, 0, 0, 0, 0, 0);
+        assertThat(boardRow).containsExactly('.', '.', '.', '.', '.', '.', '.', '.');
     }
 
     @Test
     void horizontalRepresentationTest3() {
         String representation = horizontalRepresentation(4, "4P3");
         Assertions.assertThat(representation).isEqualTo("4 | . . . . P . . . |");
-        int[] boardRow = horizontalRepresentationToBoardRow(representation);
+        char[] boardRow = horizontalRepresentationToBoardRow(representation);
         assertThat(boardRow).hasSize(8);
-        assertThat(boardRow).containsExactly(0, 0, 0, 0, 16, 0, 0, 0);
+        assertThat(boardRow).containsExactly('.', '.', '.', '.', 'P', '.', '.', '.');
     }
 
     @Test
     void horizontalRepresentationTest4() {
         String representation = horizontalRepresentation(3, "5N2");
         Assertions.assertThat(representation).isEqualTo("3 | . . . . . N . . |");
-        int[] boardRow = horizontalRepresentationToBoardRow(representation);
+        char[] boardRow = horizontalRepresentationToBoardRow(representation);
         assertThat(boardRow).hasSize(8);
-        assertThat(boardRow).containsExactly(0, 0, 0, 0, 0, 15, 0, 0);
+        assertThat(boardRow).containsExactly('.', '.', '.', '.', '.', 'N', '.', '.');
     }
 
     @Test
     void horizontalRepresentationTest5() {
         String representation = horizontalRepresentation(2, "PPPP1PPP");
         Assertions.assertThat(representation).isEqualTo("2 | P P P P . P P P |");
-        int[] boardRow = horizontalRepresentationToBoardRow(representation);
+        char[] boardRow = horizontalRepresentationToBoardRow(representation);
         assertThat(boardRow).hasSize(8);
-        assertThat(boardRow).containsExactly(16, 16, 16, 16, 0, 16, 16, 16);
+        assertThat(boardRow).containsExactly('P', 'P', 'P', 'P', '.', 'P', 'P', 'P');
     }
 
     @Test
     void horizontalRepresentationTest6() {
         String representation = horizontalRepresentation(1, "RNBQKB1R");
         Assertions.assertThat(representation).isEqualTo("1 | R N B Q K B . R |");
-        int[] boardRow = horizontalRepresentationToBoardRow(representation);
+        char[] boardRow = horizontalRepresentationToBoardRow(representation);
         assertThat(boardRow).hasSize(8);
-        assertThat(boardRow).containsExactly(13, 15, 14, 12, 11, 14, 0, 13);
+        assertThat(boardRow).containsExactly('R', 'N', 'B', 'Q', 'K', 'B', '.', 'R');
     }
 
     @Test
     void horizontalToFENStringTest1() {
-        int[] horizontal = new int[]{23, 25, 24, 22, 21, 24, 25, 23};
+        char[] horizontal = new char[]{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'};
         String fenString = horizontalToFENString(horizontal);
         assertThat(fenString).isEqualTo("rnbqkbnr");
     }
 
     @Test
     void horizontalToFENStringTest2() {
-        int[] horizontal = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
+        char[] horizontal = new char[]{'.', '.', '.', '.', '.', '.', '.', '.'};
         String fenString = horizontalToFENString(horizontal);
         assertThat(fenString).isEqualTo("8");
     }
 
     @Test
     void horizontalToFENStringTest3() {
-        int[] horizontal = new int[]{0, 0, 0, 0, 16, 0, 0, 0};
+        char[] horizontal = new char[]{'.', '.', '.', '.', 'P', '.', '.', '.'};
         String fenString = horizontalToFENString(horizontal);
         assertThat(fenString).isEqualTo("4P3");
     }
 
     @Test
     void horizontalToFENStringTest4() {
-        int[] horizontal = new int[]{0, 0, 0, 0, 0, 15, 0, 0};
+        char[] horizontal = new char[]{'.', '.', '.', '.', '.', 'N', '.', '.'};
         String fenString = horizontalToFENString(horizontal);
         assertThat(fenString).isEqualTo("5N2");
     }
 
     @Test
     void horizontalToFENStringTest5() {
-        int[] horizontal = new int[]{16, 16, 16, 16, 0, 16, 16, 16};
+        char[] horizontal = new char[]{'P', 'P', 'P', 'P', '.', 'P', 'P', 'P'};
         String fenString = horizontalToFENString(horizontal);
         assertThat(fenString).isEqualTo("PPPP1PPP");
     }
 
     @Test
     void horizontalToFENStringTest6() {
-        int[] horizontal = new int[]{13, 15, 14, 12, 11, 14, 0, 13};
+        char[] horizontal = new char[]{'R', 'N', 'B', 'Q', 'K', 'B', '.', 'R'};
         String fenString = horizontalToFENString(horizontal);
         assertThat(fenString).isEqualTo("RNBQKB1R");
     }
