@@ -1,5 +1,7 @@
 package ru.nchernetsov;
 
+import java.util.Arrays;
+
 public class Position {
 
     /**
@@ -10,7 +12,7 @@ public class Position {
     /**
      * Ход белых - true, ход белых - false
      */
-    private final boolean isWhiteMove;
+    private boolean isWhiteMove;
 
     /**
      * Возможность рокировки в короткую и длинную сторону
@@ -33,7 +35,7 @@ public class Position {
     /**
      * Номер хода (счётчик увеличивается на 1 после каждого хода чёрных)
      */
-    private final int moveNumber;
+    private int moveNumber;
 
     public Position(char[][] board, boolean isWhiteMove, boolean whiteShortCastlingPossible,
                     boolean blackShortCastlingPossible, boolean whiteLongCastlingPossible,
@@ -148,6 +150,26 @@ public class Position {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * Изменяем очерёдность хода и увеличиваем счётчик ходов
+     */
+    public void incrementMove() {
+        if (isWhiteMove) {
+            isWhiteMove = false;
+        } else {
+            isWhiteMove = true;
+            moveNumber++;
+        }
+    }
+
+    public Position copy() {
+        return new Position(Arrays.copyOf(this.board, this.board.length),
+                this.isWhiteMove, this.whiteShortCastlingPossible, this.blackShortCastlingPossible,
+                this.whiteLongCastlingPossible, this.blackLongCastlingPossible,
+                Arrays.copyOf(this.aisleTakingSquare, this.aisleTakingSquare.length),
+                this.halfMovesCount, this.moveNumber);
     }
 
     public char[][] getBoard() {
