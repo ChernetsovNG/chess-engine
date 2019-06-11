@@ -34,7 +34,7 @@ class AssemblyAndDisassemblyTest {
         assertThat(position.isBlackShortCastlingPossible()).isTrue();
         assertThat(position.isBlackLongCastlingPossible()).isTrue();
 
-        assertThat(position.getAisleTakingSquare()).containsExactly(-1, -1);
+        assertThat(position.getAisleTakingSquare()).isNull();
 
         assertThat(position.getHalfMovesCount()).isEqualTo(0);
 
@@ -68,7 +68,7 @@ class AssemblyAndDisassemblyTest {
         assertThat(position.isBlackShortCastlingPossible()).isTrue();
         assertThat(position.isBlackLongCastlingPossible()).isTrue();
 
-        assertThat(position.getAisleTakingSquare()).containsExactly(-1, -1);
+        assertThat(position.getAisleTakingSquare()).isNull();
 
         assertThat(position.getHalfMovesCount()).isEqualTo(0);
 
@@ -102,7 +102,7 @@ class AssemblyAndDisassemblyTest {
         assertThat(position.isBlackShortCastlingPossible()).isTrue();
         assertThat(position.isBlackLongCastlingPossible()).isTrue();
 
-        assertThat(position.getAisleTakingSquare()).containsExactly(-1, -1);
+        assertThat(position.getAisleTakingSquare()).isNull();
 
         assertThat(position.getHalfMovesCount()).isEqualTo(2);
 
@@ -136,7 +136,7 @@ class AssemblyAndDisassemblyTest {
         assertThat(position.isBlackShortCastlingPossible()).isTrue();
         assertThat(position.isBlackLongCastlingPossible()).isTrue();
 
-        assertThat(position.getAisleTakingSquare()).containsExactly(5, 5);
+        assertThat(position.getAisleTakingSquare().getNotation()).isEqualTo("f6");
 
         assertThat(position.getHalfMovesCount()).isEqualTo(0);
 

@@ -25,7 +25,7 @@ public class Position {
     /**
      * Поле для возможного взятия на проходе
      */
-    private final int[] aisleTakingSquare;
+    private final Square aisleTakingSquare;
 
     /**
      * Число полуходов, прошедших с последнего хода пешки или взятия фигуры
@@ -39,7 +39,7 @@ public class Position {
 
     public Position(char[][] board, boolean isWhiteMove, boolean whiteShortCastlingPossible,
                     boolean blackShortCastlingPossible, boolean whiteLongCastlingPossible,
-                    boolean blackLongCastlingPossible, int[] aisleTakingSquare, int halfMovesCount, int moveNumber) {
+                    boolean blackLongCastlingPossible, Square aisleTakingSquare, int halfMovesCount, int moveNumber) {
         this.board = board;
         this.isWhiteMove = isWhiteMove;
         this.whiteShortCastlingPossible = whiteShortCastlingPossible;
@@ -93,29 +93,10 @@ public class Position {
         sb.append(" ");
 
         // Заполняем возможность взятия на проходе
-        if (aisleTakingSquare[0] == -1 && aisleTakingSquare[1] == -1) {
+        if (aisleTakingSquare == null) {
             sb.append("-");
         } else {
-            int horizontal = aisleTakingSquare[0] + 1;
-            int vertical = aisleTakingSquare[1] + 1;
-            if (vertical == 1) {
-                sb.append("a");
-            } else if (vertical == 2) {
-                sb.append("b");
-            } else if (vertical == 3) {
-                sb.append("c");
-            } else if (vertical == 4) {
-                sb.append("d");
-            } else if (vertical == 5) {
-                sb.append("e");
-            } else if (vertical == 6) {
-                sb.append("f");
-            } else if (vertical == 7) {
-                sb.append("g");
-            } else if (vertical == 8) {
-                sb.append("h");
-            }
-            sb.append(horizontal);
+            sb.append(aisleTakingSquare.getNotation());
         }
         sb.append(" ");
 
@@ -168,8 +149,7 @@ public class Position {
         return new Position(Arrays.copyOf(this.board, this.board.length),
                 this.isWhiteMove, this.whiteShortCastlingPossible, this.blackShortCastlingPossible,
                 this.whiteLongCastlingPossible, this.blackLongCastlingPossible,
-                Arrays.copyOf(this.aisleTakingSquare, this.aisleTakingSquare.length),
-                this.halfMovesCount, this.moveNumber);
+                this.aisleTakingSquare, this.halfMovesCount, this.moveNumber);
     }
 
     public char[][] getBoard() {
@@ -196,7 +176,7 @@ public class Position {
         return blackLongCastlingPossible;
     }
 
-    public int[] getAisleTakingSquare() {
+    public Square getAisleTakingSquare() {
         return aisleTakingSquare;
     }
 

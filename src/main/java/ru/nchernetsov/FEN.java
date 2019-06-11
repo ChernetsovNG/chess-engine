@@ -70,7 +70,7 @@ public class FEN {
         boolean blackLongCastlingPossible = getBlackLongCastlingPossible(castlings);
 
         // Клетка для взятия на проходе
-        int[] aisleTakingSquare = getAisleTakingSquare(aisleTaking);
+        Square aisleTakingSquare = getAisleTakingSquare(aisleTaking);
 
         int halfMovesCountInt = Integer.parseInt(halfMovesCount);
 
@@ -232,35 +232,11 @@ public class FEN {
         return castlings.contains("q");
     }
 
-    private int[] getAisleTakingSquare(String aisleTaking) {
+    private Square getAisleTakingSquare(String aisleTaking) {
         if (aisleTaking.equals("-")) {
-            return new int[]{-1, -1};
+            return null;
         }
-        char[] chars = aisleTaking.toCharArray();
-        char letter = chars[0];
-        char number = chars[1];
-
-        int horizontal = Integer.parseInt(String.valueOf(number));
-
-        int vertical = -1;
-        if (letter == 'a') {
-            vertical = 1;
-        } else if (letter == 'b') {
-            vertical = 2;
-        } else if (letter == 'c') {
-            vertical = 3;
-        } else if (letter == 'd') {
-            vertical = 4;
-        } else if (letter == 'e') {
-            vertical = 5;
-        } else if (letter == 'f') {
-            vertical = 6;
-        } else if (letter == 'g') {
-            vertical = 7;
-        } else if (letter == 'h') {
-            vertical = 8;
-        }
-        return new int[]{horizontal - 1, vertical - 1};
+        return new Square(aisleTaking);
     }
 
     // const
