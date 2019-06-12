@@ -59,41 +59,6 @@ class FEN {
                 halfMovesCountInt, moveNumberInt);
     }
 
-    /**
-     * Вывод шахматной диаграммы в текстовом ASCII формате по образцу
-     * 11 строчек по 21 символу на каждом
-     */
-    public String[] toRepresentation() {
-        // Делим строку по пробелам - должно быть 6 элементов
-        String[] splitByWhitespace = fen.split("\\s");
-        if (splitByWhitespace.length != 6) {
-            throw new IllegalStateException("Fen split by whitespace length not equal 6");
-        }
-
-        String horizontals = splitByWhitespace[0];
-
-        // Горизонтали разбиваем по разделителю
-        String[] horizontalsArray = horizontals.split(HORIZONTAL_DELIMITER);
-        if (horizontalsArray.length != 8) {
-            throw new IllegalStateException("Horizontals array length not equal 8");
-        }
-
-        // Первая, последняя и предпоследняя строки всегда одинаковые
-        String[] result = new String[11];
-
-        result[0] = FIRST_ROW;
-
-        for (int i = 0; i < 8; i++) {
-            String horizontal = horizontalsArray[i];
-            result[i + 1] = horizontalRepresentation(8 - i, horizontal);
-        }
-
-        result[9] = PENULTIMATE_ROW;
-        result[10] = LAST_ROW;
-
-        return result;
-    }
-
     public String getFen() {
         return fen;
     }

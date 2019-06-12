@@ -156,6 +156,30 @@ public class Position {
     }
 
     /**
+     * Выполнить превращение пешки
+     */
+    public Position pawnTransformation(String move) {
+        // ход вида b2a1q
+        String fromSquareStr = move.substring(0, 2);
+        String toSquareStr = move.substring(2, 4);
+        String transformToStr = move.substring(4, 5);
+
+        Square fromSquare = new Square(fromSquareStr);
+        Square toSquare = new Square(toSquareStr);
+        char transformTo = transformToStr.toCharArray()[0];
+
+        Position positionCopy = copy();
+
+        positionCopy.incrementMove();
+        positionCopy.incrementHalfMove(move);
+
+        positionCopy.setBoardElement(toSquare, transformTo);
+        positionCopy.setBoardElement(fromSquare, '.');
+
+        return positionCopy;
+    }
+
+    /**
      * Изменяем очерёдность хода и увеличиваем счётчик ходов
      */
     public void incrementMove() {
@@ -173,13 +197,19 @@ public class Position {
      * В остальных случаях счётчик увеличивается на 1 после каждого полухода
      */
     public void incrementHalfMove(String move) {
-        if (wasPawnMove(move)) {  // ход пешкой
+        if (wasTransformPawnMove(move)) {  // превращение пешки
+            halfMovesCount = 0;
+        } else if (wasPawnMove(move)) {  // ход пешкой
             halfMovesCount = 0;
         } else if (wasTakingByFigure(move)) {  // взятие
             halfMovesCount = 0;
         } else {
             halfMovesCount++;
         }
+    }
+
+    private boolean wasTransformPawnMove(String move) {
+        return move.length() == 5;
     }
 
     private boolean wasPawnMove(String move) {
