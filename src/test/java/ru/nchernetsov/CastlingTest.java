@@ -75,6 +75,3 @@ class CastlingTest {
         assertThat(fen.getFen()).isEqualTo("2kr1bnr/pbpp1ppp/1pn1pq2/8/2BPP3/2P2N2/PP1B1PPP/RN1QK2R w KQ - 1 7");
     }
 }
-
-
-

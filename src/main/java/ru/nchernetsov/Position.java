@@ -191,7 +191,6 @@ class Position {
             // убираем пешку противника
             Square removeOppositePawnSquare = new Square(fromSquareHorizontalIndex, toSquareVerticalIndex);
             positionCopy.setBoardElement(removeOppositePawnSquare, '.');
-
             // снимаем флаг взятия на проходе
             positionCopy.aisleTakingSquare = null;
         }
@@ -281,22 +280,14 @@ class Position {
             Square right = new Square(toSquareHorizontalIndex, 1);
             char rightElement = boardElement(right);
             if (rightElement == oppositePawn) {
-                if (horizontalDelta == 2) {  // ход вверх
-                    aisleTakingSquare = new Square(toSquareHorizontalIndex - 1, toSquareVerticalIndex);
-                } else {  // ход вниз
-                    aisleTakingSquare = new Square(toSquareHorizontalIndex + 1, toSquareVerticalIndex);
-                }
+                setAisleTakingSquare(horizontalDelta, toSquareHorizontalIndex, toSquareVerticalIndex);
             }
         } else if (toSquareVerticalIndex == 7) {
             // проверяем, нет ли слева пешки противника
             Square left = new Square(toSquareHorizontalIndex, 6);
             char leftElement = boardElement(left);
             if (leftElement == oppositePawn) {
-                if (horizontalDelta == 2) {  // ход вверх
-                    aisleTakingSquare = new Square(toSquareHorizontalIndex - 1, toSquareVerticalIndex);
-                } else {  // ход вниз
-                    aisleTakingSquare = new Square(toSquareHorizontalIndex + 1, toSquareVerticalIndex);
-                }
+                setAisleTakingSquare(horizontalDelta, toSquareHorizontalIndex, toSquareVerticalIndex);
             }
         } else {
             // проверяем, нет ли слева или справа пешки противника
@@ -305,12 +296,16 @@ class Position {
             char leftElement = boardElement(left);
             char rightElement = boardElement(right);
             if (leftElement == oppositePawn || rightElement == oppositePawn) {
-                if (horizontalDelta == 2) {  // ход вверх
-                    aisleTakingSquare = new Square(toSquareHorizontalIndex - 1, toSquareVerticalIndex);
-                } else {  // ход вниз
-                    aisleTakingSquare = new Square(toSquareHorizontalIndex + 1, toSquareVerticalIndex);
-                }
+                setAisleTakingSquare(horizontalDelta, toSquareHorizontalIndex, toSquareVerticalIndex);
             }
+        }
+    }
+
+    private void setAisleTakingSquare(int horizontalDelta, int toSquareHorizontalIndex, int toSquareVerticalIndex) {
+        if (horizontalDelta == 2) {  // ход вверх
+            aisleTakingSquare = new Square(toSquareHorizontalIndex - 1, toSquareVerticalIndex);
+        } else {  // ход вниз
+            aisleTakingSquare = new Square(toSquareHorizontalIndex + 1, toSquareVerticalIndex);
         }
     }
 
@@ -332,7 +327,8 @@ class Position {
 
         int horizontalDelta = toSquareHorizontalIndex - fromSquareHorizontalIndex;
 
-        return fromSquareVerticalIndex == toSquareVerticalIndex && (horizontalDelta == -2 || horizontalDelta == 2);
+        return fromSquareVerticalIndex == toSquareVerticalIndex &&
+                (horizontalDelta == -2 || horizontalDelta == 2);
     }
 
     private void incrementCounters(String move) {
@@ -398,7 +394,6 @@ class Position {
     }
 
     private boolean wasPawnMove(String move) {
-        // с поля
         char movedFigure = movedFigure(move);
         return movedFigure == 'P' || movedFigure == 'p';
     }
