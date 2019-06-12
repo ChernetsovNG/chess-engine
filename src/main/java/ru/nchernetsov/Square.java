@@ -1,5 +1,7 @@
 package ru.nchernetsov;
 
+import java.util.Objects;
+
 public class Square {
 
     private int verticalIndex;
@@ -112,5 +114,20 @@ public class Square {
 
     public String getNotation() {
         return notation;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Square square = (Square) o;
+        return verticalIndex == square.verticalIndex &&
+                horizontalIndex == square.horizontalIndex &&
+                Objects.equals(notation, square.notation);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(verticalIndex, horizontalIndex, notation);
     }
 }

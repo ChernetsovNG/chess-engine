@@ -25,7 +25,7 @@ public class Position {
     /**
      * Поле для возможного взятия на проходе
      */
-    private final Square aisleTakingSquare;
+    private Square aisleTakingSquare;
 
     /**
      * Число полуходов, прошедших с последнего хода пешки или взятия фигуры
@@ -175,6 +175,105 @@ public class Position {
 
         positionCopy.setBoardElement(toSquare, transformTo);
         positionCopy.setBoardElement(fromSquare, '.');
+
+        return positionCopy;
+    }
+
+    /**
+     * Выполнить взятие на проходе
+     */
+    public Position takingOnAisle(String move) {
+        String fromSquareStr = move.substring(0, 2);
+        String toSquareStr = move.substring(2, 4);
+
+        Square fromSquare = new Square(fromSquareStr);
+        Square toSquare = new Square(toSquareStr);
+
+        int fromSquareHorizontalIndex = fromSquare.getHorizontalIndex();
+        int fromSquareVerticalIndex = fromSquare.getVerticalIndex();
+        int toSquareHorizontalIndex = toSquare.getHorizontalIndex();
+        int toSquareVerticalIndex = toSquare.getVerticalIndex();
+
+        int horizontalDelta = toSquareHorizontalIndex - fromSquareHorizontalIndex;
+
+        Position positionCopy = copy();
+
+        // если ход - это двойной прыжок пешки, то нужно установить признак битого поля,
+        // если рядом есть пешка противника
+        if (fromSquareVerticalIndex == toSquareVerticalIndex && (horizontalDelta == -2 || horizontalDelta == 2)) {
+            char oppositePawn = positionCopy.isWhiteMove ? 'p' : 'P';
+            if (toSquareVerticalIndex == 0) {
+                // проверяем, нет ли справа пешки противника
+                Square right = new Square(toSquareHorizontalIndex, 1);
+                char rightElement = boardElement(right);
+                if (rightElement == oppositePawn) {
+                    if (horizontalDelta == 2) {  // ход вверх
+                        positionCopy.aisleTakingSquare =
+                                new Square(toSquareHorizontalIndex - 1, toSquareVerticalIndex);
+                    } else {  // ход вниз
+                        positionCopy.aisleTakingSquare =
+                                new Square(toSquareHorizontalIndex + 1, toSquareVerticalIndex);
+                    }
+                }
+            } else if (toSquareVerticalIndex == 7) {
+                // проверяем, нет ли слева пешки противника
+                Square left = new Square(toSquareHorizontalIndex, 6);
+                char leftElement = boardElement(left);
+                if (leftElement == oppositePawn) {
+                    if (horizontalDelta == 2) {  // ход вверх
+                        positionCopy.aisleTakingSquare =
+                                new Square(toSquareHorizontalIndex - 1, toSquareVerticalIndex);
+                    } else {  // ход вниз
+                        positionCopy.aisleTakingSquare =
+                                new Square(toSquareHorizontalIndex + 1, toSquareVerticalIndex);
+                    }
+                }
+            } else {
+                // проверяем, нет ли слева или справа пешки противника
+                Square left = new Square(toSquareHorizontalIndex, toSquareVerticalIndex - 1);
+                Square right = new Square(toSquareHorizontalIndex, toSquareVerticalIndex + 1);
+                char leftElement = boardElement(left);
+                char rightElement = boardElement(right);
+                if (leftElement == oppositePawn || rightElement == oppositePawn) {
+                    if (horizontalDelta == 2) {  // ход вверх
+                        positionCopy.aisleTakingSquare =
+                                new Square(toSquareHorizontalIndex - 1, toSquareVerticalIndex);
+                    } else {  // ход вниз
+                        positionCopy.aisleTakingSquare =
+                                new Square(toSquareHorizontalIndex + 1, toSquareVerticalIndex);
+                    }
+                }
+            }
+
+            // перемещаем саму пешку на 2 поля
+            positionCopy.incrementMove();
+            positionCopy.incrementHalfMove(move);
+
+            char fromSquareElement = positionCopy.boardElement(fromSquare);
+            positionCopy.setBoardElement(toSquare, fromSquareElement);
+            positionCopy.setBoardElement(fromSquare, '.');
+        }
+
+        // если ход - это взятие на проходе, то перемещаем пешку, убираем пешку противника,
+        // снимаем флаг взятия на проходе
+        if (positionCopy.aisleTakingSquare != null) {
+            if (toSquare.equals(positionCopy.aisleTakingSquare)) {
+                positionCopy.incrementMove();
+                positionCopy.incrementHalfMove(move);
+
+                // перемещаем пешку
+                char fromSquareElement = positionCopy.boardElement(fromSquare);
+                positionCopy.setBoardElement(toSquare, fromSquareElement);
+                positionCopy.setBoardElement(fromSquare, '.');
+
+                // убираем пешку противника
+                Square removeOppositePawnSquare = new Square(fromSquareHorizontalIndex, toSquareVerticalIndex);
+                positionCopy.setBoardElement(removeOppositePawnSquare, '.');
+
+                // снимаем флаг взятия на проходе
+                positionCopy.aisleTakingSquare = null;
+            }
+        }
 
         return positionCopy;
     }
