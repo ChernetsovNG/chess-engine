@@ -13,7 +13,7 @@ class TakingAisleTest {
 
         FEN initFen = new FEN(fenString);
         Position initPosition = initFen.toPosition();
-        Position position = initPosition.doTakingOnAisle(move);
+        Position position = initPosition.doDoublePawnMove(move);
         FEN fen = position.toFEN();
 
         assertThat(fen.getFen()).isEqualTo("rnbqkbnr/p1pp1ppp/8/4p3/1pPPP3/5N2/PP3PPP/RNBQKB1R b KQkq c3 0 4");
@@ -26,7 +26,7 @@ class TakingAisleTest {
 
         FEN initFen = new FEN(fenString);
         Position initPosition = initFen.toPosition();
-        Position position = initPosition.doTakingOnAisle(move);
+        Position position = initPosition.doDoublePawnMove(move);
         FEN fen = position.toFEN();
 
         assertThat(fen.getFen()).isEqualTo("rnbqkbnr/p1pp1p2/6p1/6Pp/1pPpP3/5N2/PP3P1P/RNBQKB1R w KQkq h6 0 7");
@@ -39,7 +39,7 @@ class TakingAisleTest {
 
         FEN initFen = new FEN(fenString);
         Position initPosition = initFen.toPosition();
-        Position position = initPosition.doTakingOnAisle(move);
+        Position position = initPosition.doDoublePawnMove(move);
         FEN fen = position.toFEN();
 
         assertThat(fen.getFen()).isEqualTo("rnbqkbnr/p1pp1p2/6p1/6Pp/PpPpP3/5N2/1P3P1P/RNBQKB1R b KQkq a3 0 7");
