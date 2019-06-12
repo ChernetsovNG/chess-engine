@@ -148,6 +148,22 @@ public class Position {
         positionCopy.incrementMove();
         positionCopy.incrementHalfMove(move);
 
+        // если это рокировка - ход королём на две клетки влево или вправо,
+        // необходимо переставить короля и ладью
+        if (wasWhiteShortCastling(move)) {
+            positionCopy.setBoardElement(new Square(0, 5), 'R');
+            positionCopy.setBoardElement(new Square(0, 7), '.');
+        } else if (wasWhiteLongCastling(move)) {
+            positionCopy.setBoardElement(new Square(0, 3), 'R');
+            positionCopy.setBoardElement(new Square(0, 0), '.');
+        } else if (wasBlackShortCastling(move)) {
+            positionCopy.setBoardElement(new Square(7, 5), 'r');
+            positionCopy.setBoardElement(new Square(7, 7), '.');
+        } else if (wasBlackLongCastling(move)) {
+            positionCopy.setBoardElement(new Square(7, 3), 'r');
+            positionCopy.setBoardElement(new Square(7, 0), '.');
+        }
+
         // Если это ход ладьёй - необходимо убрать флаг рокировки для этого игрока в сторону этой ладьи.
         // Если это ход королём - необходимо убрать флаг рокировки для этого игрока
         int fromSquareVerticalIndex = fromSquare.getVerticalIndex();
@@ -366,6 +382,102 @@ public class Position {
     private boolean wasBlackKingMove(String move) {
         char movedFigure = movedFigure(move);
         return movedFigure == 'k';
+    }
+
+    private boolean wasWhiteShortCastling(String move) {
+        if (!whiteShortCastlingPossible) {
+            return false;
+        }
+        char movedFigure = movedFigure(move);
+        if (movedFigure == 'K') {
+            String fromSquareStr = move.substring(move.length() - 4, move.length() - 2);
+            String toSquareStr = move.substring(move.length() - 2);
+            Square fromSquare = new Square(fromSquareStr);
+            Square toSquare = new Square(toSquareStr);
+            if (!fromSquare.getNotation().equals("e1")) {
+                return false;
+            }
+            int fromSquareHorizontalIndex = fromSquare.getHorizontalIndex();
+            int fromSquareVerticalIndex = fromSquare.getVerticalIndex();
+            int toSquareHorizontalIndex = toSquare.getHorizontalIndex();
+            int toSquareVerticalIndex = toSquare.getVerticalIndex();
+            int horizontalDelta = toSquareHorizontalIndex - fromSquareHorizontalIndex;
+            int verticalDelta = toSquareVerticalIndex - fromSquareVerticalIndex;
+            return horizontalDelta == 0 && verticalDelta == 2;
+        }
+        return false;
+    }
+
+    private boolean wasWhiteLongCastling(String move) {
+        if (!whiteLongCastlingPossible) {
+            return false;
+        }
+        char movedFigure = movedFigure(move);
+        if (movedFigure == 'K') {
+            String fromSquareStr = move.substring(move.length() - 4, move.length() - 2);
+            String toSquareStr = move.substring(move.length() - 2);
+            Square fromSquare = new Square(fromSquareStr);
+            Square toSquare = new Square(toSquareStr);
+            if (!fromSquare.getNotation().equals("e1")) {
+                return false;
+            }
+            int fromSquareHorizontalIndex = fromSquare.getHorizontalIndex();
+            int fromSquareVerticalIndex = fromSquare.getVerticalIndex();
+            int toSquareHorizontalIndex = toSquare.getHorizontalIndex();
+            int toSquareVerticalIndex = toSquare.getVerticalIndex();
+            int horizontalDelta = toSquareHorizontalIndex - fromSquareHorizontalIndex;
+            int verticalDelta = toSquareVerticalIndex - fromSquareVerticalIndex;
+            return horizontalDelta == 0 && verticalDelta == -2;
+        }
+        return false;
+    }
+
+    private boolean wasBlackShortCastling(String move) {
+        if (!blackShortCastlingPossible) {
+            return false;
+        }
+        char movedFigure = movedFigure(move);
+        if (movedFigure == 'k') {
+            String fromSquareStr = move.substring(move.length() - 4, move.length() - 2);
+            String toSquareStr = move.substring(move.length() - 2);
+            Square fromSquare = new Square(fromSquareStr);
+            Square toSquare = new Square(toSquareStr);
+            if (!fromSquare.getNotation().equals("e8")) {
+                return false;
+            }
+            int fromSquareHorizontalIndex = fromSquare.getHorizontalIndex();
+            int fromSquareVerticalIndex = fromSquare.getVerticalIndex();
+            int toSquareHorizontalIndex = toSquare.getHorizontalIndex();
+            int toSquareVerticalIndex = toSquare.getVerticalIndex();
+            int horizontalDelta = toSquareHorizontalIndex - fromSquareHorizontalIndex;
+            int verticalDelta = toSquareVerticalIndex - fromSquareVerticalIndex;
+            return horizontalDelta == 0 && verticalDelta == 2;
+        }
+        return false;
+    }
+
+    private boolean wasBlackLongCastling(String move) {
+        if (!blackLongCastlingPossible) {
+            return false;
+        }
+        char movedFigure = movedFigure(move);
+        if (movedFigure == 'k') {
+            String fromSquareStr = move.substring(move.length() - 4, move.length() - 2);
+            String toSquareStr = move.substring(move.length() - 2);
+            Square fromSquare = new Square(fromSquareStr);
+            Square toSquare = new Square(toSquareStr);
+            if (!fromSquare.getNotation().equals("e8")) {
+                return false;
+            }
+            int fromSquareHorizontalIndex = fromSquare.getHorizontalIndex();
+            int fromSquareVerticalIndex = fromSquare.getVerticalIndex();
+            int toSquareHorizontalIndex = toSquare.getHorizontalIndex();
+            int toSquareVerticalIndex = toSquare.getVerticalIndex();
+            int horizontalDelta = toSquareHorizontalIndex - fromSquareHorizontalIndex;
+            int verticalDelta = toSquareVerticalIndex - fromSquareVerticalIndex;
+            return horizontalDelta == 0 && verticalDelta == -2;
+        }
+        return false;
     }
 
     private char movedFigure(String move) {
