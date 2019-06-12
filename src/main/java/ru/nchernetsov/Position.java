@@ -17,10 +17,10 @@ public class Position {
     /**
      * Возможность рокировки в короткую и длинную сторону
      */
-    private final boolean whiteShortCastlingPossible;
-    private final boolean blackShortCastlingPossible;
-    private final boolean whiteLongCastlingPossible;
-    private final boolean blackLongCastlingPossible;
+    private boolean whiteShortCastlingPossible;
+    private boolean blackShortCastlingPossible;
+    private boolean whiteLongCastlingPossible;
+    private boolean blackLongCastlingPossible;
 
     /**
      * Поле для возможного взятия на проходе
@@ -147,6 +147,29 @@ public class Position {
 
         positionCopy.incrementMove();
         positionCopy.incrementHalfMove(move);
+
+        // Если это ход ладьёй - необходимо убрать флаг рокировки для этого игрока в сторону этой ладьи.
+        // Если это ход королём - необходимо убрать флаг рокировки для этого игрока
+        int fromSquareVerticalIndex = fromSquare.getVerticalIndex();
+        if (wasWhiteRookMove(move)) {
+            if (fromSquareVerticalIndex <= 3) {  // ферзевая ладья
+                positionCopy.whiteLongCastlingPossible = false;
+            } else {  // королевская ладья
+                positionCopy.whiteShortCastlingPossible = false;
+            }
+        } else if (wasBlackRookMove(move)) {
+            if (fromSquareVerticalIndex <= 3) {  // ферзевая ладья
+                positionCopy.blackLongCastlingPossible = false;
+            } else {  // королевская ладья
+                positionCopy.blackShortCastlingPossible = false;
+            }
+        } else if (wasWhiteKingMove(move)) {
+            positionCopy.whiteShortCastlingPossible = false;
+            positionCopy.whiteLongCastlingPossible = false;
+        } else if (wasBlackKingMove(move)) {
+            positionCopy.blackShortCastlingPossible = false;
+            positionCopy.blackLongCastlingPossible = false;
+        }
 
         char fromSquareElement = positionCopy.boardElement(fromSquare);
         positionCopy.setBoardElement(toSquare, fromSquareElement);
@@ -313,12 +336,8 @@ public class Position {
 
     private boolean wasPawnMove(String move) {
         // с поля
-        String fromSquareStr = move.substring(move.length() - 4, move.length() - 2);
-        Square fromSquare = new Square(fromSquareStr);
-
-        char fromElement = boardElement(fromSquare);
-
-        return fromElement == 'P' || fromElement == 'p';
+        char movedFigure = movedFigure(move);
+        return movedFigure == 'P' || movedFigure == 'p';
     }
 
     private boolean wasTakingByFigure(String move) {
@@ -327,6 +346,32 @@ public class Position {
         Square toSquare = new Square(toSquareStr);
         // если на этом поле что-то было, то это взятие
         return boardElement(toSquare) != '.';
+    }
+
+    private boolean wasWhiteRookMove(String move) {
+        char movedFigure = movedFigure(move);
+        return movedFigure == 'R';
+    }
+
+    private boolean wasBlackRookMove(String move) {
+        char movedFigure = movedFigure(move);
+        return movedFigure == 'r';
+    }
+
+    private boolean wasWhiteKingMove(String move) {
+        char movedFigure = movedFigure(move);
+        return movedFigure == 'K';
+    }
+
+    private boolean wasBlackKingMove(String move) {
+        char movedFigure = movedFigure(move);
+        return movedFigure == 'k';
+    }
+
+    private char movedFigure(String move) {
+        String fromSquareStr = move.substring(move.length() - 4, move.length() - 2);
+        Square fromSquare = new Square(fromSquareStr);
+        return boardElement(fromSquare);
     }
 
     public Position copy() {
