@@ -32,7 +32,7 @@ package ru.nchernetsov;
  *    счётчик увеличивается на 1 после каждого хода чёрных
  *
  */
-public class FEN {
+class FEN {
 
     private final String fen;
 

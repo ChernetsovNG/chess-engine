@@ -5,7 +5,7 @@ import java.util.Arrays;
 import static ru.nchernetsov.Utils.HORIZONTAL_DELIMITER;
 import static ru.nchernetsov.Utils.horizontalToFENString;
 
-public class Position {
+class Position {
 
     /**
      * Представление доски (8 горизонталей)

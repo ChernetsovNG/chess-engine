@@ -2,7 +2,7 @@ package ru.nchernetsov;
 
 import java.util.Objects;
 
-public class Square {
+class Square {
 
     private int verticalIndex;
 
