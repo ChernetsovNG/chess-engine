@@ -434,85 +434,39 @@ public class Position {
         if (!whiteShortCastlingPossible) {
             return false;
         }
-        char movedFigure = movedFigure(move);
-        if (movedFigure == 'K') {
-            String fromSquareStr = move.substring(move.length() - 4, move.length() - 2);
-            String toSquareStr = move.substring(move.length() - 2);
-            Square fromSquare = new Square(fromSquareStr);
-            Square toSquare = new Square(toSquareStr);
-            if (!fromSquare.getNotation().equals("e1")) {
-                return false;
-            }
-            int fromSquareHorizontalIndex = fromSquare.getHorizontalIndex();
-            int fromSquareVerticalIndex = fromSquare.getVerticalIndex();
-            int toSquareHorizontalIndex = toSquare.getHorizontalIndex();
-            int toSquareVerticalIndex = toSquare.getVerticalIndex();
-            int horizontalDelta = toSquareHorizontalIndex - fromSquareHorizontalIndex;
-            int verticalDelta = toSquareVerticalIndex - fromSquareVerticalIndex;
-            return horizontalDelta == 0 && verticalDelta == 2;
-        }
-        return false;
+        return wasCastlingMove(move, true, true);
     }
 
     private boolean wasWhiteLongCastling(String move) {
         if (!whiteLongCastlingPossible) {
             return false;
         }
-        char movedFigure = movedFigure(move);
-        if (movedFigure == 'K') {
-            String fromSquareStr = move.substring(move.length() - 4, move.length() - 2);
-            String toSquareStr = move.substring(move.length() - 2);
-            Square fromSquare = new Square(fromSquareStr);
-            Square toSquare = new Square(toSquareStr);
-            if (!fromSquare.getNotation().equals("e1")) {
-                return false;
-            }
-            int fromSquareHorizontalIndex = fromSquare.getHorizontalIndex();
-            int fromSquareVerticalIndex = fromSquare.getVerticalIndex();
-            int toSquareHorizontalIndex = toSquare.getHorizontalIndex();
-            int toSquareVerticalIndex = toSquare.getVerticalIndex();
-            int horizontalDelta = toSquareHorizontalIndex - fromSquareHorizontalIndex;
-            int verticalDelta = toSquareVerticalIndex - fromSquareVerticalIndex;
-            return horizontalDelta == 0 && verticalDelta == -2;
-        }
-        return false;
+        return wasCastlingMove(move, true, false);
     }
 
     private boolean wasBlackShortCastling(String move) {
         if (!blackShortCastlingPossible) {
             return false;
         }
-        char movedFigure = movedFigure(move);
-        if (movedFigure == 'k') {
-            String fromSquareStr = move.substring(move.length() - 4, move.length() - 2);
-            String toSquareStr = move.substring(move.length() - 2);
-            Square fromSquare = new Square(fromSquareStr);
-            Square toSquare = new Square(toSquareStr);
-            if (!fromSquare.getNotation().equals("e8")) {
-                return false;
-            }
-            int fromSquareHorizontalIndex = fromSquare.getHorizontalIndex();
-            int fromSquareVerticalIndex = fromSquare.getVerticalIndex();
-            int toSquareHorizontalIndex = toSquare.getHorizontalIndex();
-            int toSquareVerticalIndex = toSquare.getVerticalIndex();
-            int horizontalDelta = toSquareHorizontalIndex - fromSquareHorizontalIndex;
-            int verticalDelta = toSquareVerticalIndex - fromSquareVerticalIndex;
-            return horizontalDelta == 0 && verticalDelta == 2;
-        }
-        return false;
+        return wasCastlingMove(move, false, true);
     }
 
     private boolean wasBlackLongCastling(String move) {
         if (!blackLongCastlingPossible) {
             return false;
         }
+        return wasCastlingMove(move, false, false);
+    }
+
+    // Проверяем, был ли ход рокировкой белых или чёрных, в короткую или длинную сторону
+    private boolean wasCastlingMove(String move, boolean isWhite, boolean isShort) {
         char movedFigure = movedFigure(move);
-        if (movedFigure == 'k') {
-            String fromSquareStr = move.substring(move.length() - 4, move.length() - 2);
-            String toSquareStr = move.substring(move.length() - 2);
-            Square fromSquare = new Square(fromSquareStr);
-            Square toSquare = new Square(toSquareStr);
-            if (!fromSquare.getNotation().equals("e8")) {
+        char king = isWhite ? 'K' : 'k';
+        String kingField = isWhite ? "e1" : "e8";
+        if (movedFigure == king) {
+            Square fromSquare = fromSquare(move);
+            Square toSquare = toSquare(move);
+            if (!fromSquare.getNotation().equals(kingField)) {
                 return false;
             }
             int fromSquareHorizontalIndex = fromSquare.getHorizontalIndex();
@@ -521,7 +475,9 @@ public class Position {
             int toSquareVerticalIndex = toSquare.getVerticalIndex();
             int horizontalDelta = toSquareHorizontalIndex - fromSquareHorizontalIndex;
             int verticalDelta = toSquareVerticalIndex - fromSquareVerticalIndex;
-            return horizontalDelta == 0 && verticalDelta == -2;
+            return isShort ?
+                    horizontalDelta == 0 && verticalDelta == 2 :
+                    horizontalDelta == 0 && verticalDelta == -2;
         }
         return false;
     }
