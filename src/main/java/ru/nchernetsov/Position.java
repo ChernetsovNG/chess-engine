@@ -114,13 +114,14 @@ class Position {
     }
 
     public Position move(String move) {
-        Position positionCopy = copy();
         if (wasTransformPawnMove(move)) {
-            return positionCopy.doPawnTransform(move);
-        } else if (wasDoublePawnMoveOrAisleTaking(move)) {
-            return positionCopy.doTakingOnAisle(move);
+            return doPawnTransform(move);
+        } else if (wasDoublePawnMove(move)) {
+            return doDoublePawnMove(move);
+        } else if (wasAisleTakingMove(move)) {
+            return doTakingOnAisle(move);
         } else {
-            return positionCopy.doMoveOrCastling(move);
+            return doMoveOrCastling(move);
         }
     }
 
@@ -165,9 +166,9 @@ class Position {
     }
 
     /**
-     * Выполнить взятие на проходе
+     * Выполнить ход пешкой на 2 поля
      */
-    public Position doTakingOnAisle(String move) {
+    public Position doDoublePawnMove(String move) {
         Square fromSquare = fromSquare(move);
         Square toSquare = toSquare(move);
 
@@ -181,19 +182,31 @@ class Position {
 
         // если ход - это двойной прыжок пешки, то нужно установить признак битого поля,
         // если рядом есть пешка противника
-        if (wasDoublePawnMove(move)) {
-            positionCopy.setAisleTakingFlag(toSquareHorizontalIndex, toSquareVerticalIndex, horizontalDelta);
-        }
+        positionCopy.setAisleTakingFlag(toSquareHorizontalIndex, toSquareVerticalIndex, horizontalDelta);
+        positionCopy.incrementCounters(move);
+        positionCopy.moveFigure(fromSquare, toSquare);
+
+        return positionCopy;
+    }
+
+    /**
+     * Выполнить взятие на проходе
+     */
+    public Position doTakingOnAisle(String move) {
+        Square fromSquare = fromSquare(move);
+        Square toSquare = toSquare(move);
+
+        int fromSquareHorizontalIndex = fromSquare.getHorizontalIndex();
+        int toSquareVerticalIndex = toSquare.getVerticalIndex();
+
+        Position positionCopy = copy();
 
         // если ход - это взятие на проходе, то перемещаем пешку, убираем пешку противника,
         // снимаем флаг взятия на проходе
-        if (wasAisleTakingMove(move)) {
-            // убираем пешку противника
-            Square removeOppositePawnSquare = new Square(fromSquareHorizontalIndex, toSquareVerticalIndex);
-            positionCopy.setBoardElement(removeOppositePawnSquare, '.');
-            // снимаем флаг взятия на проходе
-            positionCopy.aisleTakingSquare = null;
-        }
+        Square removeOppositePawnSquare = new Square(fromSquareHorizontalIndex, toSquareVerticalIndex);
+        positionCopy.setBoardElement(removeOppositePawnSquare, '.');
+        // снимаем флаг взятия на проходе
+        positionCopy.aisleTakingSquare = null;
 
         positionCopy.incrementCounters(move);
         positionCopy.moveFigure(fromSquare, toSquare);

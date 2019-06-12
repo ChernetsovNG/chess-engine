@@ -7,7 +7,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class ComplexMovesTest {
 
     /**
-     * "Бессмертная партия" - первые 12 ходов
+     * "Бессмертная партия" - первые 17 ходов
      * Бессмертная партия (нем. Unsterbliche Partie) — шахматная партия, сыгранная 21 июня 1851 года в Лондоне
      * между Адольфом Андерсеном (белые) и Лионелем Кизерицким (чёрные)
      * Примечательна большим количеством жертв, которые принесли белые для достижения победы
@@ -102,5 +102,40 @@ class ComplexMovesTest {
 
         Position pos24 = pos23.move("g5g6");
         assertThat(pos24.toFEN().getFen()).isEqualTo("rnb1kb1r/p2p1ppp/5nq1/1p3N2/4PpPP/3P4/PPP5/RNBQ1KR1 w kq - 1 13");
+
+        // 13. h4-h5 Фg6-g5
+        Position pos25 = pos24.move("h4h5");
+        assertThat(pos25.toFEN().getFen()).isEqualTo("rnb1kb1r/p2p1ppp/5nq1/1p3N1P/4PpP1/3P4/PPP5/RNBQ1KR1 b kq - 0 13");
+
+        Position pos26 = pos25.move("g6g5");
+        assertThat(pos26.toFEN().getFen()).isEqualTo("rnb1kb1r/p2p1ppp/5n2/1p3NqP/4PpP1/3P4/PPP5/RNBQ1KR1 w kq - 1 14");
+
+        // 14. Фd1-f3 Kf6-g8
+        Position pos27 = pos26.move("d1f3");
+        assertThat(pos27.toFEN().getFen()).isEqualTo("rnb1kb1r/p2p1ppp/5n2/1p3NqP/4PpP1/3P1Q2/PPP5/RNB2KR1 b kq - 2 14");
+
+        Position pos28 = pos27.move("f6g8");
+        assertThat(pos28.toFEN().getFen()).isEqualTo("rnb1kbnr/p2p1ppp/8/1p3NqP/4PpP1/3P1Q2/PPP5/RNB2KR1 w kq - 3 15");
+
+        // 15. Cc1:f4 Фg5-f6
+        Position pos29 = pos28.move("c1f4");
+        assertThat(pos29.toFEN().getFen()).isEqualTo("rnb1kbnr/p2p1ppp/8/1p3NqP/4PBP1/3P1Q2/PPP5/RN3KR1 b kq - 0 15");
+
+        Position pos30 = pos29.move("g5f6");
+        assertThat(pos30.toFEN().getFen()).isEqualTo("rnb1kbnr/p2p1ppp/5q2/1p3N1P/4PBP1/3P1Q2/PPP5/RN3KR1 w kq - 1 16");
+
+        // 16. Kb1-c3 Cf8-c5
+        Position pos31 = pos30.move("b1c3");
+        assertThat(pos31.toFEN().getFen()).isEqualTo("rnb1kbnr/p2p1ppp/5q2/1p3N1P/4PBP1/2NP1Q2/PPP5/R4KR1 b kq - 2 16");
+
+        Position pos32 = pos31.move("f8c5");
+        assertThat(pos32.toFEN().getFen()).isEqualTo("rnb1k1nr/p2p1ppp/5q2/1pb2N1P/4PBP1/2NP1Q2/PPP5/R4KR1 w kq - 3 17");
+
+        // 17. Kc3-d5 Фf6:b2
+        Position pos33 = pos32.move("c3d5");
+        assertThat(pos33.toFEN().getFen()).isEqualTo("rnb1k1nr/p2p1ppp/5q2/1pbN1N1P/4PBP1/3P1Q2/PPP5/R4KR1 b kq - 4 17");
+
+        Position pos34 = pos33.move("f6b2");
+        assertThat(pos34.toFEN().getFen()).isEqualTo("rnb1k1nr/p2p1ppp/8/1pbN1N1P/4PBP1/3P1Q2/PqP5/R4KR1 w kq - 0 18");
     }
 }
