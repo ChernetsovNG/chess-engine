@@ -13,7 +13,7 @@ class CastlingTest {
 
         FEN initFen = new FEN(fenString);
         Position initPosition = initFen.toPosition();
-        Position position = initPosition.move(move);
+        Position position = initPosition.doMoveOrCastling(move);
         FEN fen = position.toFEN();
 
         assertThat(fen.getFen()).isEqualTo("r4rk1/pppppppp/8/N7/8/8/PPPPPPPP/R4RK1 b - - 2 17");
@@ -27,7 +27,7 @@ class CastlingTest {
 
         FEN initFen = new FEN(fenString);
         Position initPosition = initFen.toPosition();
-        Position position = initPosition.move(move);
+        Position position = initPosition.doMoveOrCastling(move);
         FEN fen = position.toFEN();
 
         assertThat(fen.getFen()).isEqualTo("r1bqk1nr/pppp1ppp/2n5/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 5 4");
@@ -41,7 +41,7 @@ class CastlingTest {
 
         FEN initFen = new FEN(fenString);
         Position initPosition = initFen.toPosition();
-        Position position = initPosition.move(move);
+        Position position = initPosition.doMoveOrCastling(move);
         FEN fen = position.toFEN();
 
         assertThat(fen.getFen()).isEqualTo("r2qk1nr/ppp1bppp/2npb3/4p3/4P3/2NPB3/PPPQ1PPP/2KR1BNR b kq - 7 6");
@@ -55,7 +55,7 @@ class CastlingTest {
 
         FEN initFen = new FEN(fenString);
         Position initPosition = initFen.toPosition();
-        Position position = initPosition.move(move);
+        Position position = initPosition.doMoveOrCastling(move);
         FEN fen = position.toFEN();
 
         assertThat(fen.getFen()).isEqualTo("r2q1rk1/ppp1bppp/2npbn2/4p3/4P3/2NPB3/PPPQNPPP/2KR1B1R w - - 10 8");
@@ -69,7 +69,7 @@ class CastlingTest {
 
         FEN initFen = new FEN(fenString);
         Position initPosition = initFen.toPosition();
-        Position position = initPosition.move(move);
+        Position position = initPosition.doMoveOrCastling(move);
         FEN fen = position.toFEN();
 
         assertThat(fen.getFen()).isEqualTo("2kr1bnr/pbpp1ppp/1pn1pq2/8/2BPP3/2P2N2/PP1B1PPP/RN1QK2R w KQ - 1 7");

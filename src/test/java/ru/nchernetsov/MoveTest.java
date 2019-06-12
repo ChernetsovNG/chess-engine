@@ -72,7 +72,7 @@ public class MoveTest {
         String move = "a2h2";
         FEN fen = new FEN(fenString);
         Position position = fen.toPosition();
-        Position afterMove = position.move(move);
+        Position afterMove = position.doMoveOrCastling(move);
         FEN fenAfterMove = afterMove.toFEN();
         assertThat(fenAfterMove.getFen()).isEqualTo("k7/r7/b7/q7/N7/B7/7R/K7 b - - 16 48");
     }
@@ -83,7 +83,7 @@ public class MoveTest {
         String move = "f3e5";
         FEN fen = new FEN(fenString);
         Position position = fen.toPosition();
-        Position afterMove = position.move(move);
+        Position afterMove = position.doMoveOrCastling(move);
         FEN fenAfterMove = afterMove.toFEN();
         assertThat(fenAfterMove.getFen()).isEqualTo("r1bq1rk1/1ppnppbp/p2p2p1/3PN3/2P1P3/2N4P/PP2BPP1/R1BQK2R b KQ - 0 10");
     }

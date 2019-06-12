@@ -4,9 +4,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static ru.nchernetsov.FEN.horizontalRepresentation;
-import static ru.nchernetsov.FEN.horizontalRepresentationToBoardRow;
-import static ru.nchernetsov.Position.horizontalToFENString;
+import static ru.nchernetsov.Utils.horizontalRepresentation;
+import static ru.nchernetsov.Utils.horizontalRepresentationToBoardRow;
+import static ru.nchernetsov.Utils.horizontalToFENString;
 
 class AssemblyAndDisassemblyTest {
 

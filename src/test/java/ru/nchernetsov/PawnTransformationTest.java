@@ -13,7 +13,7 @@ class PawnTransformationTest {
 
         FEN initFen = new FEN(fenString);
         Position initPosition = initFen.toPosition();
-        Position position = initPosition.pawnTransformation(move);
+        Position position = initPosition.doPawnTransform(move);
         FEN fen = position.toFEN();
 
         assertThat(fen.getFen()).isEqualTo("rnbqkbnr/pppp1ppp/4P3/8/8/8/P4PPP/qNBQKBNR w KQkq - 0 6");
@@ -26,7 +26,7 @@ class PawnTransformationTest {
 
         FEN initFen = new FEN(fenString);
         Position initPosition = initFen.toPosition();
-        Position position = initPosition.pawnTransformation(move);
+        Position position = initPosition.doPawnTransform(move);
         FEN fen = position.toFEN();
 
         assertThat(fen.getFen()).isEqualTo("r1bq1N1r/p1pppk1p/1pn2n2/8/3P4/8/PPP2PPP/RNBQKBNR b KQ - 0 6");

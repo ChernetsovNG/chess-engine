@@ -3,7 +3,7 @@ package ru.nchernetsov;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static ru.nchernetsov.FEN.horizontalRepresentation;
+import static ru.nchernetsov.Utils.horizontalRepresentation;
 
 class FENTest {
 

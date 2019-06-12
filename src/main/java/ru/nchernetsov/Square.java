@@ -10,13 +10,13 @@ public class Square {
 
     private String notation;
 
-    public Square(String notation) {
+    Square(String notation) {
         this.notation = notation;
         verticalIndex = calcVerticalIndex(notation);
         horizontalIndex = calcHorizontalIndex(notation);
     }
 
-    public Square(int horizontal, int vertical) {
+    Square(int horizontal, int vertical) {
         if (horizontal < 0 || horizontal > 7) {
             throw new IllegalArgumentException("horizontal must be 0 ... 7");
         }
@@ -104,11 +104,11 @@ public class Square {
         }
     }
 
-    public int getVerticalIndex() {
+    int getVerticalIndex() {
         return verticalIndex;
     }
 
-    public int getHorizontalIndex() {
+    int getHorizontalIndex() {
         return horizontalIndex;
     }
 
